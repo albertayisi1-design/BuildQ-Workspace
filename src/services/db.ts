@@ -16,6 +16,7 @@ import {
   WBSItem,
   ProjectDocument,
   EmailAlert,
+  ProjectMilestone,
 } from '../types';
 import {
   INITIAL_AUDIT_LOGS,
@@ -29,6 +30,7 @@ import {
   INITIAL_WBS_ITEMS,
   INITIAL_DOCUMENTS,
   INITIAL_ALERTS,
+  INITIAL_MILESTONES,
 } from './seedData';
 
 const STORAGE_PREFIX = 'buildiq_db_';
@@ -43,6 +45,7 @@ class RelationalDatabaseService {
   private projectHistory: ProjectHistory[] = [];
   private documents: ProjectDocument[] = [];
   private alerts: EmailAlert[] = [];
+  private milestones: ProjectMilestone[] = [];
   private settings: SystemSettings = INITIAL_SETTINGS;
   private auditLogs: AuditLog[] = [];
 
@@ -143,6 +146,9 @@ class RelationalDatabaseService {
       const storedAlerts = localStorage.getItem(STORAGE_PREFIX + 'alerts');
       this.alerts = storedAlerts ? JSON.parse(storedAlerts) : INITIAL_ALERTS;
 
+      const storedMilestones = localStorage.getItem(STORAGE_PREFIX + 'milestones');
+      this.milestones = storedMilestones ? JSON.parse(storedMilestones) : INITIAL_MILESTONES;
+
       const storedSettings = localStorage.getItem(STORAGE_PREFIX + 'settings');
       this.settings = storedSettings ? JSON.parse(storedSettings) : INITIAL_SETTINGS;
 
@@ -167,6 +173,7 @@ class RelationalDatabaseService {
       localStorage.setItem(STORAGE_PREFIX + 'project_history', JSON.stringify(this.projectHistory));
       localStorage.setItem(STORAGE_PREFIX + 'documents', JSON.stringify(this.documents));
       localStorage.setItem(STORAGE_PREFIX + 'alerts', JSON.stringify(this.alerts));
+      localStorage.setItem(STORAGE_PREFIX + 'milestones', JSON.stringify(this.milestones));
       localStorage.setItem(STORAGE_PREFIX + 'settings', JSON.stringify(this.settings));
       localStorage.setItem(STORAGE_PREFIX + 'audit_logs', JSON.stringify(this.auditLogs));
     } catch (err) {
@@ -184,6 +191,7 @@ class RelationalDatabaseService {
     this.projectHistory = [...INITIAL_PROJECT_HISTORY];
     this.documents = [...INITIAL_DOCUMENTS];
     this.alerts = [...INITIAL_ALERTS];
+    this.milestones = [...INITIAL_MILESTONES];
     this.settings = { ...INITIAL_SETTINGS };
     this.auditLogs = [...INITIAL_AUDIT_LOGS];
 
@@ -1166,6 +1174,103 @@ class RelationalDatabaseService {
         `Removed document "${doc.title}" (${doc.file_name})`
       );
     }
+    this.saveToStorage();
+  }
+
+  // --- CRITICAL PATH MILESTONES ---
+  public getMilestones(projectId?: string): ProjectMilestone[] {
+    if (projectId) {
+      return this.milestones
+        .filter((m) => m.project_id === projectId)
+        .sort((a, b) => (a.planned_date > b.planned_date ? 1 : -1));
+    }
+    return [...this.milestones].sort((a, b) => (a.planned_date > b.planned_date ? 1 : -1));
+  }
+
+  public getMilestone(id: string): ProjectMilestone | undefined {
+    return this.milestones.find((m) => m.id === id);
+  }
+
+  public addMilestone(
+    data: Omit<ProjectMilestone, 'id' | 'created_at'>,
+    user: User | null
+  ): ProjectMilestone {
+    let variance_days = data.variance_days || 0;
+    if (data.actual_date && data.planned_date) {
+      const pDate = new Date(data.planned_date).getTime();
+      const aDate = new Date(data.actual_date).getTime();
+      variance_days = Math.round((aDate - pDate) / (1000 * 60 * 60 * 24));
+    }
+
+    const newMilestone: ProjectMilestone = {
+      ...data,
+      id: 'mls_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+      variance_days,
+      created_at: new Date().toISOString(),
+    };
+
+    this.milestones.push(newMilestone);
+    this.addAuditLog(
+      user,
+      'Milestone Created',
+      'milestone',
+      newMilestone.id,
+      `Created ${newMilestone.is_critical_path ? '[CRITICAL PATH] ' : ''}milestone "${newMilestone.title}" (Planned: ${newMilestone.planned_date})`
+    );
+    this.saveToStorage();
+    return newMilestone;
+  }
+
+  public updateMilestone(
+    id: string,
+    updates: Partial<ProjectMilestone>,
+    user: User | null
+  ): ProjectMilestone {
+    const idx = this.milestones.findIndex((m) => m.id === id);
+    if (idx === -1) throw new Error('Milestone not found');
+
+    const existing = this.milestones[idx];
+    const plannedDate = updates.planned_date || existing.planned_date;
+    const actualDate = updates.actual_date !== undefined ? updates.actual_date : existing.actual_date;
+
+    let variance_days = updates.variance_days !== undefined ? updates.variance_days : existing.variance_days || 0;
+    if (actualDate && plannedDate) {
+      const pDate = new Date(plannedDate).getTime();
+      const aDate = new Date(actualDate).getTime();
+      variance_days = Math.round((aDate - pDate) / (1000 * 60 * 60 * 24));
+    }
+
+    const updated: ProjectMilestone = {
+      ...existing,
+      ...updates,
+      variance_days,
+    };
+
+    if (updated.status === 'Achieved' && !updated.actual_date) {
+      updated.actual_date = new Date().toISOString().split('T')[0];
+      const pDate = new Date(updated.planned_date).getTime();
+      const aDate = new Date(updated.actual_date).getTime();
+      updated.variance_days = Math.round((aDate - pDate) / (1000 * 60 * 60 * 24));
+    }
+
+    this.milestones[idx] = updated;
+    this.addAuditLog(
+      user,
+      'Milestone Updated',
+      'milestone',
+      id,
+      `Updated milestone "${updated.title}" - Status: ${updated.status}${updated.actual_date ? `, Actual: ${updated.actual_date} (Variance: ${updated.variance_days}d)` : ''}`
+    );
+    this.saveToStorage();
+    return updated;
+  }
+
+  public deleteMilestone(id: string, user: User | null): void {
+    const item = this.milestones.find((m) => m.id === id);
+    if (!item) return;
+
+    this.milestones = this.milestones.filter((m) => m.id !== id);
+    this.addAuditLog(user, 'Milestone Deleted', 'milestone', id, `Removed milestone "${item.title}"`);
     this.saveToStorage();
   }
 

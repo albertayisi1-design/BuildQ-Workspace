@@ -2,24 +2,19 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import { registerSW } from 'virtual:pwa-register';
 
-// Unregister any stale service workers in development to prevent module interception
+// Register PWA service worker for offline caching and installability
 if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-  try {
-    navigator.serviceWorker.getRegistrations().then((registrations) => {
-      for (const registration of registrations) {
-        registration.unregister().then((success) => {
-          if (success) {
-            console.log('[PWA] Unregistered stale dev service worker:', registration.scope);
-          }
-        });
-      }
-    }).catch((err) => {
-      console.warn('[PWA] Service worker cleanup warning:', err);
-    });
-  } catch (e) {
-    console.warn('[PWA] Service worker check warning:', e);
-  }
+  registerSW({
+    immediate: true,
+    onRegistered(r) {
+      console.log('[PWA] Service Worker successfully registered:', r?.scope);
+    },
+    onRegisterError(error) {
+      console.warn('[PWA] Service Worker registration failed:', error);
+    },
+  });
 }
 
 createRoot(document.getElementById('root')!).render(

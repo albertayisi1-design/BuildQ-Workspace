@@ -23,6 +23,7 @@ interface SidebarProps {
   onSelectTab: (tab: string) => void;
   isOpen: boolean;
   onToggle: () => void;
+  onOpenAndroidApp?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -30,6 +31,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectTab,
   isOpen,
   onToggle,
+  onOpenAndroidApp,
 }) => {
   const { currentUser, canAccess, logout } = useAuth();
 
@@ -147,7 +149,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             id="sidebar-btn-android-app"
             onClick={() => {
-              onSelectTab('settings');
+              if (onOpenAndroidApp) {
+                onOpenAndroidApp();
+              } else {
+                onSelectTab('settings');
+              }
               if (window.innerWidth < 1024) {
                 onToggle();
               }

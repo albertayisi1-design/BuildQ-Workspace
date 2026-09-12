@@ -15,6 +15,7 @@ import {
   WBSItem,
   ProjectDocument,
   EmailAlert,
+  ProjectMilestone,
 } from '../types';
 import { db } from '../services/db';
 import { notificationService } from '../services/notificationService';
@@ -38,6 +39,7 @@ export interface BuildContextType {
   historicalProjects: ProjectHistory[];
   documents: ProjectDocument[];
   alerts: EmailAlert[];
+  milestones: ProjectMilestone[];
   settings: SystemSettings;
   auditLogs: AuditLog[];
   refreshData: () => void;
@@ -65,6 +67,10 @@ export interface BuildContextType {
   createDocument: (docData: Omit<ProjectDocument, 'id' | 'uploaded_at'>) => ProjectDocument;
   updateDocument: (id: string, updates: Partial<ProjectDocument>) => ProjectDocument;
   deleteDocument: (id: string) => void;
+  // Critical Path Milestones
+  createMilestone: (milestoneData: Omit<ProjectMilestone, 'id' | 'created_at'>) => ProjectMilestone;
+  updateMilestone: (id: string, updates: Partial<ProjectMilestone>) => ProjectMilestone;
+  deleteMilestone: (id: string) => void;
   // Site reports & Notifications
   createSiteReport: (reportData: Omit<SiteReport, 'id' | 'created_at'>) => SiteReport;
   updateSiteReport: (id: string, updates: Partial<SiteReport>) => SiteReport | null;
@@ -127,6 +133,7 @@ export const BuildProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const siteReports = useMemo(() => db.getSiteReports(), [version]);
   const documents = useMemo(() => db.getDocuments(), [version]);
   const alerts = useMemo(() => db.getAlerts(), [version]);
+  const milestones = useMemo(() => db.getMilestones(), [version]);
   const projectHistory = useMemo(() => {
     const raw = db.getHistoricalProjects();
     // Ensure aliases are populated for historical view
@@ -317,6 +324,32 @@ export const BuildProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       deleteDocumentFromFirestore(id).catch((err) => {
         console.warn('Firestore doc delete warning:', err);
       });
+      refreshData();
+    },
+    [currentUser, refreshData]
+  );
+
+  const createMilestone = useCallback(
+    (milestoneData: Omit<ProjectMilestone, 'id' | 'created_at'>) => {
+      const m = db.addMilestone(milestoneData, currentUser);
+      refreshData();
+      return m;
+    },
+    [currentUser, refreshData]
+  );
+
+  const updateMilestone = useCallback(
+    (id: string, updates: Partial<ProjectMilestone>) => {
+      const m = db.updateMilestone(id, updates, currentUser);
+      refreshData();
+      return m;
+    },
+    [currentUser, refreshData]
+  );
+
+  const deleteMilestone = useCallback(
+    (id: string) => {
+      db.deleteMilestone(id, currentUser);
       refreshData();
     },
     [currentUser, refreshData]
@@ -561,6 +594,7 @@ export const BuildProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         historicalProjects: projectHistory,
         documents,
         alerts,
+        milestones,
         settings,
         auditLogs,
         refreshData,
@@ -582,6 +616,9 @@ export const BuildProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         createDocument,
         updateDocument,
         deleteDocument,
+        createMilestone,
+        updateMilestone,
+        deleteMilestone,
         createSiteReport,
         updateSiteReport,
         sendSiteReportAlert,

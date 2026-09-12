@@ -28,20 +28,45 @@ interface AndroidAppModalProps {
 }
 
 export const AndroidAppModal: React.FC<AndroidAppModalProps> = ({ isOpen, onClose }) => {
-  const { canInstall, isInstalled, isStandalone, install } = usePWAInstall();
+  const { canInstall, isInstalled, isStandalone, isInIframe, install, openInNewWindow } = usePWAInstall();
   const [downloadingApk, setDownloadingApk] = useState(false);
   const [downloadingZip, setDownloadingZip] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState(false);
   const [lastDownloaded, setLastDownloaded] = useState<string | null>(null);
+  const [installStatus, setInstallStatus] = useState<
+    'idle' | 'installing' | 'accepted' | 'dismissed' | 'opened_window' | 'guide'
+  >('idle');
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const currentUrl = typeof window !== 'undefined' ? window.location.origin : ANDROID_CONFIG.appUrl;
+  const currentUrl = typeof window !== 'undefined' ? window.location.href : ANDROID_CONFIG.appUrl;
 
   const handleInstallClick = async () => {
-    const outcome = await install();
-    if (outcome === 'accepted') {
-      alert('BuildIQ has been added to your Android home screen and app launcher!');
+    if (canInstall) {
+      setInstallStatus('installing');
+      try {
+        const outcome = await install();
+        if (outcome === 'accepted') {
+          setInstallStatus('accepted');
+          setStatusMessage('BuildIQ was successfully added to your Android app drawer and home screen!');
+        } else if (outcome === 'dismissed') {
+          setInstallStatus('dismissed');
+          setStatusMessage('Installation prompt was dismissed. You can tap anytime to retry or use Chrome menu ⋮ > Install App.');
+        } else {
+          setInstallStatus('guide');
+          setStatusMessage('Direct prompt unavailable in this view. In Chrome, tap ⋮ > Install App, or open in a new tab.');
+        }
+      } catch (err) {
+        console.error('[PWA] install error:', err);
+        setInstallStatus('guide');
+        setStatusMessage('In Android Chrome, tap ⋮ > Install App or Add to Home Screen.');
+      }
+    } else {
+      // In preview iframe, desktop or when beforeinstallprompt is suppressed:
+      openInNewWindow();
+      setInstallStatus('opened_window');
+      setStatusMessage('Opening BuildIQ in a full browser window where native Android Chrome install is enabled.');
     }
   };
 
@@ -150,33 +175,76 @@ export const AndroidAppModal: React.FC<AndroidAppModalProps> = ({ isOpen, onClos
                 </p>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-amber-200/50">
+              <div className="mt-4 pt-3 border-t border-amber-200/50 space-y-3">
+                {/* Active Notification Banner */}
+                {statusMessage && (
+                  <div
+                    className={`p-2.5 rounded-lg text-xs font-medium flex items-start gap-2 animate-fadeIn ${
+                      installStatus === 'accepted'
+                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                        : installStatus === 'opened_window'
+                        ? 'bg-cyan-100 text-cyan-900 border border-cyan-300'
+                        : 'bg-amber-100 text-amber-900 border border-amber-300'
+                    }`}
+                  >
+                    {installStatus === 'accepted' ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    ) : (
+                      <ExternalLink className="w-4 h-4 text-cyan-700 shrink-0 mt-0.5" />
+                    )}
+                    <div className="flex-1 text-[11px] leading-relaxed">
+                      {statusMessage}
+                    </div>
+                  </div>
+                )}
+
                 {isStandalone || isInstalled ? (
                   <div className="flex items-center gap-2 text-emerald-700 bg-emerald-100/60 p-2.5 rounded-lg text-xs font-semibold">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Installed & Active in Standalone Mode</span>
+                    <span>Installed &amp; Active in Standalone Mode</span>
                   </div>
-                ) : canInstall ? (
-                  <button
-                    id="btn-install-pwa-now"
-                    onClick={handleInstallClick}
-                    className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-4 rounded-md text-xs shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer border border-slate-950"
-                  >
-                    <Smartphone className="w-4 h-4" />
-                    <span>Install on Android Now</span>
-                  </button>
                 ) : (
                   <div className="space-y-2">
                     <button
+                      id="btn-trigger-android-install"
                       onClick={handleInstallClick}
-                      className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-4 rounded-md text-xs shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer border border-slate-950"
+                      className="w-full bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white font-bold py-2.5 px-4 rounded-md text-xs shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer border border-slate-950"
                     >
-                      <Smartphone className="w-4 h-4 text-white" />
-                      <span>Trigger Android Install Prompt</span>
+                      <Smartphone className="w-4 h-4 text-amber-400" />
+                      <span>{canInstall ? 'Install on Android Now' : 'Trigger Android Install Prompt'}</span>
                     </button>
-                    <p className="text-[11px] text-slate-500 text-center">
-                      Tip: In Chrome on Android, tap <strong>⋮ &gt; Install App</strong> or <strong>Add to Home Screen</strong>.
-                    </p>
+
+                    {/* Quick Access Helper Buttons for Preview / Mobile Window */}
+                    <div className="flex items-center gap-2">
+                      <a
+                        href={currentUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-semibold py-1.5 px-2.5 rounded-md text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                        title="Open outside preview in standalone browser window"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5 text-slate-600" />
+                        <span>Open in New Tab</span>
+                      </a>
+
+                      <button
+                        onClick={handleCopyUrl}
+                        className="bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-semibold py-1.5 px-2.5 rounded-md text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0"
+                        title="Copy direct installation link"
+                      >
+                        {copiedUrl ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-slate-600" />}
+                        <span>{copiedUrl ? 'Copied' : 'Copy Link'}</span>
+                      </button>
+                    </div>
+
+                    <div className="bg-amber-500/10 border border-amber-300/60 rounded-lg p-2.5 text-[11px] text-slate-700 space-y-1">
+                      <div className="font-bold text-slate-900 flex items-center gap-1">
+                        <span>📱 Quick Android Steps:</span>
+                      </div>
+                      <p className="leading-relaxed text-slate-600">
+                        In Chrome, tap <strong>⋮ (Menu)</strong> &bull; select <strong>Install App</strong> or <strong>Add to Home Screen</strong>.
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>

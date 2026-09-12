@@ -51,6 +51,25 @@ export type ProjectType =
   | 'Institutional'
   | 'Other';
 
+export type MilestoneStatus = 'Pending' | 'In Progress' | 'Achieved' | 'Delayed';
+
+export interface ProjectMilestone {
+  id: string;
+  project_id: string;
+  title: string;
+  description?: string;
+  category?: string; // e.g., 'Substructure', 'Superstructure', 'Envelope & Dry-In', 'MEP & Services', 'Finishes & Commissioning', 'Handover'
+  planned_date: string; // Target critical path planned date (YYYY-MM-DD)
+  actual_date?: string; // Actual date completed (YYYY-MM-DD)
+  status: MilestoneStatus;
+  is_critical_path: boolean; // Flag if on critical path
+  responsible_party?: string; // Responsible contractor, lead, or inspector
+  progress?: number; // 0 - 100%
+  variance_days?: number; // Positive = delayed (days), negative = ahead of schedule
+  notes?: string;
+  created_at: string;
+}
+
 export type CostCategory = 'Labour' | 'Materials' | 'Subcontractor' | 'Equipment' | 'Other';
 export type CostType = CostCategory;
 
@@ -282,7 +301,7 @@ export interface AuditLog {
   user_id: string;
   user_name: string;
   action: string;
-  entity: 'project' | 'cost' | 'wbs' | 'site_report' | 'client' | 'history' | 'settings' | 'auth' | 'user';
+  entity: 'project' | 'cost' | 'wbs' | 'site_report' | 'client' | 'history' | 'settings' | 'auth' | 'user' | 'milestone' | 'document';
   entity_id: string;
   details: string;
   timestamp: string;

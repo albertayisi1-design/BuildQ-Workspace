@@ -119,6 +119,7 @@ function AppContent() {
         }}
         isOpen={isSidebarOpen}
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+        onOpenAndroidApp={() => setIsAndroidModalOpen(true)}
       />
 
       {/* Main Column */}

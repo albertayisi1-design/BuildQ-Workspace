@@ -8,6 +8,7 @@ import {
 } from '../../utils/formatters';
 import { HealthBadge } from '../common/HealthBadge';
 import { ProjectDocumentsTab } from './ProjectDocumentsTab';
+import { ProjectMilestonesTab } from './ProjectMilestonesTab';
 import { ProjectTimeline } from './ProjectTimeline';
 import { ProjectGanttChart } from './ProjectGanttChart';
 import {
@@ -32,6 +33,7 @@ import {
   FileText,
   BarChart2,
   Mail,
+  Flag,
 } from 'lucide-react';
 
 interface ProjectOverviewProps {
@@ -60,12 +62,17 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
     completeProject,
     settings,
     documents,
+    milestones,
   } = useBuild();
 
-  const [activeSubTab, setActiveSubTab] = useState<'overview' | 'gantt' | 'timeline' | 'documents'>('overview');
+  const [activeSubTab, setActiveSubTab] = useState<'overview' | 'milestones' | 'gantt' | 'timeline' | 'documents'>('overview');
 
   const project = projects.find((p) => p.id === projectId);
   const client = clients.find((c) => c.id === project?.client_id);
+  const projectMilestones = useMemo(
+    () => milestones.filter((m) => m.project_id === projectId),
+    [milestones, projectId]
+  );
   const projectDocs = useMemo(
     () => documents.filter((d) => d.project_id === projectId),
     [documents, projectId]
@@ -239,7 +246,7 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
         </div>
       </div>
 
-      {/* Sub-Tab Navigation: Overview & Financials vs Gantt vs Timeline vs Documents */}
+      {/* Sub-Tab Navigation: Overview & Financials vs Milestones vs Gantt vs Timeline vs Documents */}
       <div className="flex items-center gap-1 border-b border-slate-200">
         <button
           id="tab-btn-project-overview"
@@ -252,6 +259,22 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
         >
           <Layers className="w-4 h-4 text-cyan-600" />
           <span>Overview & Financials</span>
+        </button>
+
+        <button
+          id="tab-btn-project-milestones"
+          onClick={() => setActiveSubTab('milestones')}
+          className={`h-10 px-4 text-xs font-bold border-b-2 transition-all cursor-pointer inline-flex items-center gap-2 shrink-0 ${
+            activeSubTab === 'milestones'
+              ? 'border-cyan-500 text-cyan-900 bg-cyan-50/40 rounded-t-lg'
+              : 'border-transparent text-slate-500 hover:text-cyan-700 hover:bg-lime-50/50'
+          }`}
+        >
+          <Flag className="w-4 h-4 text-amber-600" />
+          <span>Milestones & Critical Path</span>
+          <span className="text-[10px] font-mono font-bold bg-amber-100 text-amber-900 px-1.5 py-0.2 rounded-full border border-amber-300">
+            {projectMilestones.length}
+          </span>
         </button>
 
         <button
@@ -304,7 +327,9 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
       </div>
 
       {/* Conditional Sub-Tab View */}
-      {activeSubTab === 'documents' ? (
+      {activeSubTab === 'milestones' ? (
+        <ProjectMilestonesTab project={project} />
+      ) : activeSubTab === 'documents' ? (
         <ProjectDocumentsTab project={project} />
       ) : activeSubTab === 'timeline' ? (
         <ProjectTimeline
@@ -633,8 +658,39 @@ export const ProjectOverview: React.FC<ProjectOverviewProps> = ({
         onOpenAddSiteReport={onOpenAddSiteReport}
       />
 
-      {/* Bento Quick Access to WBS, Costs, Site Reports, Documents */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Bento Quick Access to Milestones, WBS, Costs, Site Reports, Documents */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        {/* Critical Milestones Bento Card */}
+        <div className="bento-card p-5 flex flex-col justify-between hover:border-amber-400/80 hover:shadow-md transition-all">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] font-bold uppercase text-slate-500">Critical Milestones</span>
+              <Flag className="w-4 h-4 text-amber-500" />
+            </div>
+            <div className="flex items-baseline gap-2">
+              <div className="text-2xl font-bold text-slate-900 font-mono">
+                {projectMilestones.filter((m) => m.status === 'Achieved').length} / {projectMilestones.length}
+              </div>
+              <span className="text-xs font-bold text-amber-700 font-mono">
+                {projectMilestones.length > 0
+                  ? Math.round((projectMilestones.filter((m) => m.status === 'Achieved').length / projectMilestones.length) * 100)
+                  : 0}%
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 mt-1">
+              {projectMilestones.filter((m) => m.is_critical_path).length} critical path dates controlling handover
+            </p>
+          </div>
+          <button
+            id="btn-overview-open-milestones"
+            onClick={() => setActiveSubTab('milestones')}
+            className="mt-4 text-xs font-semibold text-amber-800 hover:text-amber-900 flex items-center justify-between cursor-pointer pt-2 border-t border-slate-100"
+          >
+            <span>Track Milestones</span>
+            <span>&rarr;</span>
+          </button>
+        </div>
+
         {/* WBS Bento Card */}
         <div className="bento-card p-5 flex flex-col justify-between hover:border-amber-400/80 hover:shadow-md transition-all">
           <div>
