@@ -1,0 +1,147 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Catch-All Deny (The Master Gate)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && (request.auth.token.email_verified == true || request.auth.token.firebase.sign_in_provider == 'google.com');
+    }
+
+    function isAdmin() {
+      return isVerifiedUser() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        request.auth.token.email == 'albert.ayisi1@gmail.com'
+      );
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Validation helper for Users
+    function isValidUser(data) {
+      return data.uid is string && data.uid.size() <= 128 &&
+             data.email is string && data.email.size() <= 256 &&
+             data.name is string && data.name.size() <= 128 &&
+             data.role is string && data.role.size() <= 50 &&
+             data.status is string && (data.status == 'active' || data.status == 'suspended');
+    }
+
+    // Validation helper for Documents
+    function isValidDocument(data) {
+      return data.id is string && isValidId(data.id) &&
+             data.project_id is string && isValidId(data.project_id) &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             data.file_name is string && data.file_name.size() > 0 && data.file_name.size() <= 255 &&
+             data.category is string && data.category.size() <= 50 &&
+             data.status is string && data.status.size() <= 50 &&
+             data.uploaded_by is string && data.uploaded_by.size() <= 128 &&
+             data.uploaded_by_uid is string && data.uploaded_by_uid.size() <= 128;
+    }
+
+    // USERS COLLECTION
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isOwner(userId) && isValidUser(incoming()) && incoming().uid == request.auth.uid &&
+                       (incoming().role != 'admin' || isAdmin());
+      allow update: if isValidId(userId) && (
+        isAdmin() ||
+        (isOwner(userId) && isValidUser(incoming()) &&
+         incoming().diff(existing()).affectedKeys().hasOnly(['name', 'avatar', 'updatedAt']) &&
+         incoming().uid == existing().uid && incoming().email == existing().email && incoming().role == existing().role)
+      );
+      allow delete: if isValidId(userId) && isAdmin();
+    }
+
+    // ADMINS COLLECTION
+    match /admins/{adminId} {
+      allow get: if isSignedIn();
+      allow list: if isAdmin();
+      allow write: if isValidId(adminId) && isAdmin();
+    }
+
+    // DOCUMENTS COLLECTION
+    match /documents/{docId} {
+      allow get: if isSignedIn() && isValidId(docId);
+      allow list: if isSignedIn();
+      allow create: if isVerifiedUser() && isValidId(docId) &&
+                       isValidDocument(incoming()) &&
+                       incoming().uploaded_by_uid == request.auth.uid;
+      allow update: if isVerifiedUser() && isValidId(docId) && isValidDocument(incoming()) &&
+                       incoming().id == existing().id &&
+                       incoming().project_id == existing().project_id &&
+                       (isAdmin() || incoming().uploaded_by_uid == existing().uploaded_by_uid) &&
+                       (
+                         isAdmin() ||
+                         incoming().diff(existing()).affectedKeys().hasOnly(['title', 'category', 'status', 'description', 'version', 'issuing_authority', 'expiry_date', 'tags', 'file_data', 'updated_at'])
+                       );
+      allow delete: if isVerifiedUser() && isValidId(docId) && (isAdmin() || existing().uploaded_by_uid == request.auth.uid);
+    }
+
+    // PROJECTS COLLECTION
+    match /projects/{projectId} {
+      allow get: if isSignedIn() && isValidId(projectId);
+      allow list: if isSignedIn();
+      allow create: if isVerifiedUser() && isValidId(projectId) && incoming().id is string && incoming().name is string;
+      allow update: if isVerifiedUser() && isValidId(projectId) && incoming().id == existing().id;
+      allow delete: if isVerifiedUser() && isValidId(projectId) && isAdmin();
+    }
+
+    // OPERATIONAL COLLECTIONS: WBS, COSTS, CLIENTS, SITE REPORTS
+    match /wbs_items/{id} {
+      allow get: if isSignedIn() && isValidId(id);
+      allow list: if isSignedIn();
+      allow create, update: if isVerifiedUser() && isValidId(id);
+      allow delete: if isVerifiedUser() && isValidId(id) && isAdmin();
+    }
+
+    match /costs/{id} {
+      allow get: if isSignedIn() && isValidId(id);
+      allow list: if isSignedIn();
+      allow create, update: if isVerifiedUser() && isValidId(id);
+      allow delete: if isVerifiedUser() && isValidId(id) && isAdmin();
+    }
+
+    match /clients/{id} {
+      allow get: if isSignedIn() && isValidId(id);
+      allow list: if isSignedIn();
+      allow create, update: if isVerifiedUser() && isValidId(id);
+      allow delete: if isVerifiedUser() && isValidId(id) && isAdmin();
+    }
+
+    match /site_reports/{id} {
+      allow get: if isSignedIn() && isValidId(id);
+      allow list: if isSignedIn();
+      allow create, update: if isVerifiedUser() && isValidId(id);
+      allow delete: if isVerifiedUser() && isValidId(id) && isAdmin();
+    }
+
+    match /audit_logs/{id} {
+      allow get: if isSignedIn() && isValidId(id);
+      allow list: if isSignedIn();
+      allow create: if isVerifiedUser() && isValidId(id);
+      allow update, delete: if false; // Audit logs are immutable append-only
+    }
+  }
+}

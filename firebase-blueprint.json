@@ -1,0 +1,93 @@
+{
+  "version": "1.0.0",
+  "entities": {
+    "User": {
+      "title": "User",
+      "type": "object",
+      "required": ["uid", "email", "name", "role", "status"],
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "name": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["admin", "project_manager", "site_supervisor", "cost_estimator", "safety_officer"] },
+        "status": { "type": "string", "enum": ["active", "suspended"] },
+        "clientId": { "type": "string", "maxLength": 128 },
+        "avatar": { "type": "string", "maxLength": 512 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      }
+    },
+    "Document": {
+      "title": "Document",
+      "type": "object",
+      "required": ["id", "project_id", "title", "file_name", "category", "status", "uploaded_by_uid", "uploaded_at"],
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "project_id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "maxLength": 200 },
+        "file_name": { "type": "string", "maxLength": 255 },
+        "category": { "type": "string", "enum": ["Blueprint", "Contract", "Permit", "Specification", "Safety & Compliance", "Other"] },
+        "file_size": { "type": "number", "minimum": 0, "maximum": 50000000 },
+        "file_type": { "type": "string", "maxLength": 100 },
+        "version": { "type": "string", "maxLength": 20 },
+        "status": { "type": "string", "enum": ["Approved", "Under Review", "Draft", "Active", "Expired"] },
+        "uploaded_by": { "type": "string", "maxLength": 128 },
+        "uploaded_by_uid": { "type": "string", "maxLength": 128 },
+        "uploaded_at": { "type": "string", "maxLength": 50 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "issuing_authority": { "type": "string", "maxLength": 128 },
+        "expiry_date": { "type": "string", "maxLength": 50 },
+        "tags": { "type": "array", "maxItems": 10 },
+        "file_data": { "type": "string", "maxLength": 2000000 }
+      }
+    },
+    "Project": {
+      "title": "Project",
+      "type": "object",
+      "required": ["id", "name", "code", "typology", "status"],
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "maxLength": 200 },
+        "code": { "type": "string", "maxLength": 50 },
+        "typology": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "maxLength": 50 },
+        "target_budget": { "type": "number", "minimum": 0 },
+        "current_forecast": { "type": "number", "minimum": 0 },
+        "actual_cost": { "type": "number", "minimum": 0 }
+      }
+    }
+  },
+  "firestore": {
+    "users": {
+      "path": "/users/{userId}",
+      "entity": "User"
+    },
+    "admins": {
+      "path": "/admins/{userId}",
+      "description": "Trusted collection defining verified platform administrators"
+    },
+    "documents": {
+      "path": "/documents/{docId}",
+      "entity": "Document"
+    },
+    "projects": {
+      "path": "/projects/{projectId}",
+      "entity": "Project"
+    },
+    "wbs_items": {
+      "path": "/wbs_items/{wbsId}"
+    },
+    "costs": {
+      "path": "/costs/{costId}"
+    },
+    "clients": {
+      "path": "/clients/{clientId}"
+    },
+    "site_reports": {
+      "path": "/site_reports/{reportId}"
+    },
+    "audit_logs": {
+      "path": "/audit_logs/{logId}"
+    }
+  }
+}

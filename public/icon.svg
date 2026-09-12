@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background rounded canvas matching original Logica aesthetic -->
+  <rect width="512" height="512" rx="112" fill="#000000" />
+  <rect x="8" y="8" width="496" height="496" rx="104" fill="none" stroke="#1E293B" stroke-width="4" stroke-opacity="0.6" />
+
+  <!-- Logica Softworks Signature Neon Green Mark -->
+  <g transform="translate(64, 64) scale(3.84)">
+    <path
+      d="M 14 62 L 14 24 A 12 12 0 0 1 26 12 L 74 12 A 12 12 0 0 1 86 24 L 86 74 A 12 12 0 0 1 74 86 L 28 86 L 8 86 L 22 72"
+      fill="none"
+      stroke="#00E575"
+      stroke-width="11"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </g>
+</svg>

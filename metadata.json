@@ -1,0 +1,8 @@
+{
+  "name": "BuildIQ",
+  "description": "Construction Project Intelligence & Cost Management platform for capturing operational project data, tracking WBS budgets and costs, and generating archive project cost benchmarks and preliminary estimates.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
