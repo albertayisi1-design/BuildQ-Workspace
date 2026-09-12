@@ -89,6 +89,26 @@ export const SiteReportsView: React.FC<SiteReportsViewProps> = ({
       .sort((a, b) => (a.date < b.date ? 1 : -1));
   }, [siteReports, selectedProjectId, selectedFlagFilter, searchTerm]);
 
+  const severityCounts = useMemo(() => {
+    const baseReports =
+      selectedProjectId === 'ALL'
+        ? siteReports
+        : siteReports.filter((r) => r.project_id === selectedProjectId);
+    return {
+      all: baseReports.length,
+      normal: baseReports.filter((r) => (r.flag || 'normal') === 'normal').length,
+      delay: baseReports.filter((r) => r.flag === 'delay').length,
+      critical: baseReports.filter((r) => r.flag === 'critical').length,
+    };
+  }, [siteReports, selectedProjectId]);
+
+  const reportTabs = [
+    { id: 'all', label: 'All Logs', count: severityCounts.all },
+    { id: 'normal', label: 'Routine', count: severityCounts.normal },
+    { id: 'delay', label: 'Schedule Delays', count: severityCounts.delay },
+    { id: 'critical', label: 'Critical Incidents', count: severityCounts.critical },
+  ];
+
   const handleCreateReport = (e: React.FormEvent) => {
     e.preventDefault();
     if (!modalProjectId) return;
@@ -158,98 +178,113 @@ export const SiteReportsView: React.FC<SiteReportsViewProps> = ({
 
   return (
     <div id="site-reports-view" className="space-y-5 pb-12">
-      {/* Bento View Header */}
-      <div className="bento-card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-xl font-bold text-slate-900 tracking-tight font-sans">
-              Site Reports & Daily Logs
-            </h1>
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-100 text-cyan-800 uppercase tracking-wider">
-              {filteredReports.length} Submitted
-            </span>
-            {alerts.length > 0 && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                <Mail className="w-3 h-3 text-amber-700" />
-                {alerts.length} PM Email Alerts
+      {/* Bento View Header (Reduced by 25% with Integrated Tabs & Controls) */}
+      <div className="bento-card p-3 sm:p-3.5 space-y-2.5">
+        {/* Top Header Row */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5">
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight font-sans">
+                Site Reports & Daily Logs
+              </h1>
+              <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-cyan-100 text-cyan-800 uppercase tracking-wider">
+                {filteredReports.length} Submitted
               </span>
-            )}
-          </div>
-          <p className="text-xs text-slate-500 mt-1">
-            Supervisory field verification: worker counts, weather conditions, deliveries, photographic site progress, and automated PM alert dispatch.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            id="btn-open-email-alerts-log"
-            onClick={() => setIsAlertsLogOpen(true)}
-            className="h-9 px-3.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-xs inline-flex items-center gap-1.5 transition-all shadow-xs cursor-pointer shrink-0"
-            title="View audit trail of email alerts sent to Project Managers"
-          >
-            <Mail className="w-3.5 h-3.5 text-cyan-600" />
-            <span>PM Email Alerts</span>
-            <span className="ml-0.5 px-1.5 py-0.2 rounded-full bg-slate-100 text-[10px] font-mono font-bold text-slate-700 border border-slate-200">
-              {alerts.length}
-            </span>
-          </button>
-
-          <button
-            id="btn-create-site-report"
-            onClick={() => setIsModalOpen(true)}
-            className="h-9 px-3.5 rounded-lg bg-cyan-600 hover:bg-lime-500 text-white font-bold text-xs inline-flex items-center gap-1.5 transition-all shadow-xs cursor-pointer shrink-0 "
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>New Daily Report</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Bento Filter Bar */}
-      <div className="bento-card p-4 flex flex-col md:flex-row gap-3 items-center justify-between">
-        <div className="relative w-full md:w-80">
-          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            id="inp-search-site-reports"
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search report logs or materials..."
-            className="w-full pl-8.5 pr-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-amber-500 bg-white"
-          />
-        </div>
-
-        <div className="flex items-center gap-3 w-full md:w-auto flex-wrap">
-          <div className="flex items-center gap-1.5 text-xs">
-            <span className="text-[11px] font-semibold text-slate-500 shrink-0">Severity:</span>
-            <select
-              id="sel-filter-site-reports-flag"
-              value={selectedFlagFilter}
-              onChange={(e) => setSelectedFlagFilter(e.target.value as any)}
-              className="px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-amber-500"
-            >
-              <option value="all">All Severities</option>
-              <option value="normal">Routine Only</option>
-              <option value="delay">Schedule Delays</option>
-              <option value="critical">Critical Incidents</option>
-            </select>
+              {alerts.length > 0 && (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                  <Mail className="w-2.5 h-2.5 text-amber-700" />
+                  {alerts.length} PM Email Alerts
+                </span>
+              )}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              Supervisory field verification: worker counts, weather conditions, deliveries, photographic site progress, and automated PM alert dispatch.
+            </p>
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs">
-            <span className="text-[11px] font-semibold text-slate-500 shrink-0">Project:</span>
-            <select
-              id="sel-filter-site-reports-project"
-              value={selectedProjectId}
-              onChange={(e) => setSelectedProjectId(e.target.value)}
-              className="w-full sm:w-auto px-3 py-1.5 rounded-lg border border-slate-200 text-xs bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-amber-500 max-w-xs truncate"
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              id="btn-open-email-alerts-log"
+              onClick={() => setIsAlertsLogOpen(true)}
+              className="h-7.5 px-3 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-xs inline-flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer shrink-0"
+              title="View audit trail of email alerts sent to Project Managers"
             >
-              <option value="ALL">All Projects</option>
-              {projects.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
+              <Mail className="w-3.5 h-3.5 text-cyan-600" />
+              <span>PM Email Alerts</span>
+              <span className="ml-0.5 px-1.5 py-0.2 rounded-full bg-slate-100 text-[10px] font-mono font-bold text-slate-700 border border-slate-200">
+                {alerts.length}
+              </span>
+            </button>
+
+            <button
+              id="btn-create-site-report"
+              onClick={() => setIsModalOpen(true)}
+              className="h-7.5 px-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs inline-flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer shrink-0"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>New Daily Report</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Integrated Filter Tabs & Search Controls Row */}
+        <div className="pt-2 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-2.5">
+          {/* Severity Tabs */}
+          <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-0.5 md:pb-0 scrollbar-none">
+            {reportTabs.map((tab) => {
+              const isActive = selectedFlagFilter === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setSelectedFlagFilter(tab.id as any)}
+                  className={`h-7 px-2.5 rounded-md text-xs font-semibold inline-flex items-center gap-1.5 whitespace-nowrap transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-slate-900 text-white shadow-2xs font-bold'
+                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent'
+                  }`}
+                >
+                  <span>{tab.label}</span>
+                  <span
+                    className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold ${
+                      isActive ? 'bg-slate-800 text-slate-200' : 'bg-slate-100 text-slate-500'
+                    }`}
+                  >
+                    {tab.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Search & Project Controls */}
+          <div className="flex items-center gap-2 w-full md:w-auto shrink-0">
+            <div className="relative flex-1 md:w-52">
+              <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                id="inp-search-site-reports"
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search report logs or materials..."
+                className="w-full pl-8 pr-2.5 py-1 rounded-md border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-cyan-500 bg-white"
+              />
+            </div>
+
+            <div className="flex items-center gap-1 text-xs shrink-0">
+              <select
+                id="sel-filter-site-reports-project"
+                value={selectedProjectId}
+                onChange={(e) => setSelectedProjectId(e.target.value)}
+                className="h-7 px-2.5 rounded-md border border-slate-200 text-xs bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-cyan-500 max-w-44 truncate shrink-0"
+              >
+                <option value="ALL">All Projects</option>
+                {projects.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       </div>

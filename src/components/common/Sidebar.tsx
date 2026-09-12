@@ -39,7 +39,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'wbs', label: 'WBS & Activities', icon: GitFork, access: 'wbs' },
     { id: 'costs', label: 'Costs', icon: Receipt, access: 'costs' },
     { id: 'site_reports', label: 'Site Reports', icon: ClipboardList, access: 'site_reports' },
-    { id: 'historical', label: 'Archive Projects', icon: Archive, access: 'historical' },
+    { id: 'historical', label: 'Archived Projects', icon: Archive, access: 'historical' },
     { id: 'intelligence', label: 'Project Intelligence', icon: BrainCircuit, access: 'intelligence', highlight: true },
     { id: 'reports', label: 'Reports', icon: FileBarChart2, access: 'reports' },
     { id: 'settings', label: 'Settings', icon: Settings, access: 'settings' },

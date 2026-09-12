@@ -58,7 +58,7 @@ export const Header: React.FC<HeaderProps> = ({
       case 'site_reports':
         return 'Site Logs & Diaries';
       case 'historical':
-        return 'Archive Benchmarks';
+        return 'Archived Projects';
       case 'intelligence':
         return 'Parametric Intelligence';
       case 'reports':

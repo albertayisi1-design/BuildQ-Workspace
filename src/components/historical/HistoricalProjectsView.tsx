@@ -154,7 +154,7 @@ export const HistoricalProjectsView: React.FC<HistoricalProjectsViewProps> = ({
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-bold text-slate-900 tracking-tight font-sans">
-              Archive Projects Knowledge Base
+              Archived Projects
             </h1>
             <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-100 text-cyan-800 uppercase tracking-wider">
               {filteredProjects.length} Archived Projects
