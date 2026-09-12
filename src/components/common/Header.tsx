@@ -96,9 +96,6 @@ export const Header: React.FC<HeaderProps> = ({
             {getPageTitle(currentTab)}
           </span>
         </h1>
-        <div className="hidden md:inline-flex items-center justify-center h-7 px-2 rounded-md bg-slate-100 text-[11px] text-slate-600 border border-slate-200 font-mono font-medium whitespace-nowrap shrink-0">
-          CIVIL OPS v1.0.4
-        </div>
       </div>
 
       {/* Right Controls */}

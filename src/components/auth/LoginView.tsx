@@ -7,7 +7,6 @@ import {
   EyeOff,
   ArrowRight,
   User as UserIcon,
-  ShieldCheck,
 } from 'lucide-react';
 
 export const LoginView: React.FC = () => {
@@ -220,20 +219,12 @@ export const LoginView: React.FC = () => {
             )}
           </button>
 
-          {/* Formal Enterprise Security Guarantee & Embedded Logica Banner */}
-          <div className="mt-2.5 pt-2 border-t border-slate-100 flex flex-col items-center gap-1.5 text-center">
-            <p className="text-[10px] text-slate-400 flex items-center justify-center gap-1">
-              <ShieldCheck className="w-3 h-3 text-emerald-600 shrink-0" />
-              <span>Enterprise 256-bit encryption • ISO 27001 &amp; SOC 2</span>
+          {/* Embedded Logica Softworks Banner without black background */}
+          <div className="mt-2.5 pt-2 border-t border-slate-100 w-full flex flex-col items-center justify-center">
+            <LogicaLogo variant="full" size="sm" isDark={false} />
+            <p className="text-[9px] font-mono text-slate-400 tracking-wider uppercase mt-0.5">
+              Enterprise Solution
             </p>
-
-            {/* Embedded Logica Softworks Banner without black background */}
-            <div className="pt-1.5 border-t border-slate-100 w-full flex flex-col items-center justify-center">
-              <LogicaLogo variant="full" size="sm" isDark={false} />
-              <p className="text-[9px] font-mono text-slate-400 tracking-wider uppercase mt-0.5">
-                Enterprise Solution
-              </p>
-            </div>
           </div>
         </div>
       </div>

@@ -75,11 +75,11 @@ export const ProjectAnalyticsCards: React.FC<ProjectAnalyticsCardsProps> = ({
   const [activeHoverMonth, setActiveHoverMonth] = useState<string | null>(null);
 
   return (
-    <div id="project-data-analytics-grid" className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
+    <div id="project-data-analytics-grid" className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 items-stretch">
       {/* CARD 1: Project Cost Incurred by Month */}
       <div
         id="card-cost-incurred-by-month"
-        className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-xs flex flex-col justify-between"
+        className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs flex flex-col justify-between h-full"
       >
         {/* Header */}
         <div className="flex items-start justify-between gap-3 mb-4">
@@ -223,7 +223,7 @@ export const ProjectAnalyticsCards: React.FC<ProjectAnalyticsCardsProps> = ({
       {/* CARD 2: Cost per Square Foot by Project */}
       <div
         id="card-cost-per-sqft"
-        className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-xs flex flex-col justify-between"
+        className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs flex flex-col justify-between h-full"
       >
         {/* Header */}
         <div className="flex items-start justify-between gap-3 mb-4">

@@ -284,22 +284,22 @@ export const ParametricCostStudio: React.FC<ParametricCostStudioProps> = ({
           </div>
         </div>
 
-        {/* 3. Live Parametric Calculation Display (Interactive Result Card) */}
-        <div className="pt-3 border-t border-slate-100">
-          <div className="p-3 sm:p-3.5 rounded-xl bg-slate-50/80 border border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        {/* 3. Live Parametric Calculation Display (Interactive Result Card - Reduced by 40%) */}
+        <div className="pt-2 border-t border-slate-100">
+          <div className="py-1.5 px-2.5 sm:py-2 sm:px-3 rounded-lg bg-slate-50/80 border border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-[9px] uppercase font-bold tracking-wider text-slate-500">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[8px] uppercase font-bold tracking-wider text-slate-500">
                   Preliminary Parametric Estimate
                 </span>
-                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-lime-100 text-lime-800 font-mono">
+                <span className="px-1 py-0.2 rounded text-[8px] font-bold bg-lime-100 text-lime-800 font-mono">
                   Confidence: 94%
                 </span>
               </div>
-              <div className="text-xl sm:text-2xl font-extrabold text-[#0F172A] font-mono tracking-tight mt-0.5">
+              <div className="text-base sm:text-lg font-extrabold text-[#0F172A] font-mono tracking-tight leading-tight mt-0.5">
                 {formatCurrency(result.preliminary_estimate.estimated_cost)}
               </div>
-              <div className="flex items-center gap-2.5 text-[11px] text-slate-500 mt-0.5 font-mono flex-wrap">
+              <div className="flex items-center gap-1.5 text-[9.5px] text-slate-500 mt-0.5 font-mono flex-wrap">
                 <span>
                   Range: {formatCurrency(result.preliminary_estimate.range_min)} – {formatCurrency(result.preliminary_estimate.range_max)}
                 </span>
@@ -313,7 +313,7 @@ export const ParametricCostStudio: React.FC<ParametricCostStudioProps> = ({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-2 flex-wrap shrink-0">
+            <div className="flex items-center gap-1.5 flex-wrap shrink-0">
               {onNavigate && (
                 <button
                   type="button"
@@ -324,10 +324,10 @@ export const ParametricCostStudio: React.FC<ParametricCostStudioProps> = ({
                     }
                     onNavigate('intelligence');
                   }}
-                  className="h-7.5 px-3 rounded-md bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold border border-slate-300 transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-2xs "
+                  className="h-6 px-2.5 rounded bg-white hover:bg-slate-50 text-slate-800 text-[11px] font-bold border border-slate-300 transition-all cursor-pointer inline-flex items-center gap-1 shadow-2xs"
                 >
                   <span>Detailed Intelligence</span>
-                  <ArrowRight className="w-3 h-3 text-slate-500" />
+                  <ArrowRight className="w-2.5 h-2.5 text-slate-500" />
                 </button>
               )}
 
@@ -347,7 +347,7 @@ export const ParametricCostStudio: React.FC<ParametricCostStudioProps> = ({
                     onNavigate('projects');
                   }
                 }}
-                className="h-7.5 px-3 rounded-md bg-linear-to-r from-cyan-500 to-lime-500 hover:from-cyan-600 hover:to-lime-600 text-white text-xs font-bold transition-all shadow-xs cursor-pointer inline-flex items-center gap-1.5 "
+                className="h-6 px-2.5 rounded bg-linear-to-r from-cyan-500 to-lime-500 hover:from-cyan-600 hover:to-lime-600 text-white text-[11px] font-bold transition-all shadow-xs cursor-pointer inline-flex items-center gap-1"
               >
                 <span>+ Seed New Project</span>
               </button>

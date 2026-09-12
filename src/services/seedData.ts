@@ -143,7 +143,7 @@ export const INITIAL_CLIENTS: Client[] = [
 ];
 
 export const INITIAL_PROJECTS: Project[] = [
-  // 3 ACTIVE PROJECTS
+  // 2 ACTIVE PROJECTS
   {
     id: 'proj_act_1',
     project_number: 'PRJ-2026-001',
@@ -186,27 +186,6 @@ export const INITIAL_PROJECTS: Project[] = [
     progress: 70,
     created_at: '2026-01-05T10:00:00Z',
   },
-  {
-    id: 'proj_act_3',
-    project_number: 'PRJ-2026-003',
-    name: 'Harbourfront Retail Arcade',
-    client_id: 'cli_4',
-    type: 'Retail',
-    building_type: 'Commercial Retail',
-    location: 'Vancouver, BC',
-    floor_area: 950,
-    floors: 2,
-    contract_value: 1750000,
-    approved_budget: 1420000,
-    start_date: '2026-05-01',
-    planned_completion: '2026-12-20',
-    project_manager: 'David Chen',
-    description: 'Two-storey waterfront retail space with expansive curtain-wall glazing, structural steel mezzanine, and boutique tenant fit-outs.',
-    status: 'Active',
-    forecast_remaining: 1100000,
-    progress: 25,
-    created_at: '2026-04-10T14:30:00Z',
-  },
 
   // 1 PLANNING PROJECT
   {
@@ -231,7 +210,7 @@ export const INITIAL_PROJECTS: Project[] = [
     created_at: '2026-06-01T11:00:00Z',
   },
 
-  // 1 COMPLETED HISTORICAL / BENCHMARK PROJECT (Total 5 Demo Projects: 3 Active, 1 Planning, 1 Completed)
+  // 1 COMPLETED HISTORICAL / BENCHMARK PROJECT (Total 4 Demo Projects: 2 Active, 1 Planning, 1 Completed)
   {
     id: 'proj_hist_1',
     project_number: 'PRJ-2024-001',
@@ -1152,12 +1131,12 @@ export const INITIAL_DOCUMENTS: ProjectDocument[] = [
     tags: ['Blueprints', 'Floorplans', 'BIM'],
   },
 
-  // Harbourfront Retail Arcade (proj_act_3)
+  // Centennial Corporate HQ Refit (proj_act_2) supplementary documentation
   {
     id: 'doc_10',
-    project_id: 'proj_act_3',
-    title: 'Vancouver Coastal & Commercial Development Approval',
-    file_name: 'Vancouver_Harbourfront_Development_Permit_2026.pdf',
+    project_id: 'proj_act_2',
+    title: 'Commercial Development Approval & Environmental Compliance',
+    file_name: 'Centennial_Development_Permit_2026.pdf',
     category: 'Permit',
     file_size: 3400000,
     file_type: 'application/pdf',
@@ -1165,16 +1144,16 @@ export const INITIAL_DOCUMENTS: ProjectDocument[] = [
     status: 'Active',
     uploaded_by: 'David Chen',
     uploaded_at: '2026-04-18T11:20:00Z',
-    description: 'Waterfront commercial zoning permit including public realm setbacks, pedestrian arcade clearances, and seismic marine pilings.',
-    issuing_authority: 'City of Vancouver Planning Commission',
+    description: 'Commercial zoning approval including public realm setbacks, acoustic testing, and seismic refit clearances.',
+    issuing_authority: 'City of Ottawa Planning Commission',
     expiry_date: '2027-04-30',
-    tags: ['Permits', 'Waterfront', 'Vancouver'],
+    tags: ['Permits', 'Commercial', 'Ottawa'],
   },
   {
     id: 'doc_11',
-    project_id: 'proj_act_3',
+    project_id: 'proj_act_2',
     title: 'Double-Glazed Curtain Wall Engineering Specification',
-    file_name: 'Harbourfront_Curtain_Wall_Acoustic_Specs.pdf',
+    file_name: 'Centennial_Curtain_Wall_Acoustic_Specs.pdf',
     category: 'Specification',
     file_size: 6800000,
     file_type: 'application/pdf',

@@ -91,10 +91,17 @@ class RelationalDatabaseService {
       const storedProjects = localStorage.getItem(STORAGE_PREFIX + 'projects');
       if (storedProjects) {
         const parsed: Project[] = JSON.parse(storedProjects);
-        // Clean out legacy demo completed projects (proj_hist_2 through proj_hist_6) so demo projects are cleanly 5
-        const removedLegacyIds = new Set(['proj_hist_2', 'proj_hist_3', 'proj_hist_4', 'proj_hist_5', 'proj_hist_6']);
+        // Clean out legacy demo projects (including proj_act_3 so demo projects strictly have 2 active projects)
+        const removedLegacyIds = new Set([
+          'proj_hist_2',
+          'proj_hist_3',
+          'proj_hist_4',
+          'proj_hist_5',
+          'proj_hist_6',
+          'proj_act_3',
+        ]);
         const filteredProjects = parsed.filter((p) => !removedLegacyIds.has(p.id));
-        // Ensure the 5 canonical demo projects exist
+        // Ensure the canonical demo projects exist
         INITIAL_PROJECTS.forEach((initProj) => {
           if (!filteredProjects.some((p) => p.id === initProj.id)) {
             filteredProjects.push(initProj);
@@ -130,7 +137,8 @@ class RelationalDatabaseService {
       }
 
       const storedDocuments = localStorage.getItem(STORAGE_PREFIX + 'documents');
-      this.documents = storedDocuments ? JSON.parse(storedDocuments) : INITIAL_DOCUMENTS;
+      const loadedDocs: ProjectDocument[] = storedDocuments ? JSON.parse(storedDocuments) : INITIAL_DOCUMENTS;
+      this.documents = loadedDocs.map((d) => (d.project_id === 'proj_act_3' ? { ...d, project_id: 'proj_act_2' } : d));
 
       const storedAlerts = localStorage.getItem(STORAGE_PREFIX + 'alerts');
       this.alerts = storedAlerts ? JSON.parse(storedAlerts) : INITIAL_ALERTS;

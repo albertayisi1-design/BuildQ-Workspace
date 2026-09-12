@@ -508,10 +508,10 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
         </div>
       </div>
 
-      {/* Primary Analytical Charts: Financial Variance & Cost Distribution Side-by-Side (Reduced by 30%) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5 items-stretch">
+      {/* Primary Analytical Charts: Financial Variance & Cost Distribution Side-by-Side */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 items-stretch">
         {/* Financial Chart: Budget vs Actual Cost */}
-        <div id="chart-financial-variance" className="bento-card p-3.5 sm:p-4 flex flex-col justify-between">
+        <div id="chart-financial-variance" className="bento-card p-3.5 sm:p-4 flex flex-col justify-between h-full">
           <div>
             <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-100">
               <div>
@@ -581,7 +581,7 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
         </div>
 
         {/* Cost Distribution Graph (Side-by-Side with Financial Variance) */}
-        <div id="chart-cost-distribution" className="flex">
+        <div id="chart-cost-distribution" className="flex flex-col h-full">
           <CostDistributionCard className="w-full h-full" compact />
         </div>
       </div>
