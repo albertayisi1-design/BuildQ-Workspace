@@ -2,19 +2,39 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
-import { registerSW } from 'virtual:pwa-register';
 
-// Register PWA service worker for offline caching and installability
+// Prevent service worker module interception in development which causes multiple copies of React
 if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-  registerSW({
-    immediate: true,
-    onRegistered(r) {
-      console.log('[PWA] Service Worker successfully registered:', r?.scope);
-    },
-    onRegisterError(error) {
-      console.warn('[PWA] Service Worker registration failed:', error);
-    },
-  });
+  if (import.meta.env.DEV) {
+    try {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        for (const registration of registrations) {
+          registration.unregister().then((success) => {
+            if (success) {
+              console.log('[PWA] Unregistered dev service worker:', registration.scope);
+            }
+          });
+        }
+      }).catch((err) => {
+        console.warn('[PWA] Service worker cleanup warning:', err);
+      });
+
+      if ('caches' in window) {
+        caches.keys().then((keys) => {
+          keys.forEach((key) => caches.delete(key));
+        });
+      }
+    } catch (e) {
+      console.warn('[PWA] Service worker cleanup error:', e);
+    }
+  } else if (import.meta.env.PROD) {
+    // In production build, register the service worker after load
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch((err) => {
+        console.warn('[PWA] Service worker registration error:', err);
+      });
+    });
+  }
 }
 
 createRoot(document.getElementById('root')!).render(

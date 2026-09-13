@@ -174,6 +174,7 @@ function AppContent() {
             <WBSView
               selectedProjectId={selectedProjectId || undefined}
               onNavigateToCost={(projId) => handleOpenAddCost(projId)}
+              onNavigate={handleNavigate}
             />
           )}
 
