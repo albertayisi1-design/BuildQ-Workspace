@@ -716,8 +716,8 @@ export const WBSView: React.FC<WBSViewProps> = ({
       {/* Add Activity Modal */}
       {isAddModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-2 overflow-y-auto">
-          <div className="bg-white rounded-xl border border-slate-200 shadow-2xl w-full max-w-[360px] p-3.5 space-y-2 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xl w-full max-w-[380px] max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-slate-100 px-3.5 py-2.5 shrink-0 bg-slate-50">
               <h3 className="text-xs sm:text-sm font-bold text-slate-900 font-display">
                 Add WBS Activity
               </h3>
@@ -729,7 +729,7 @@ export const WBSView: React.FC<WBSViewProps> = ({
               </button>
             </div>
 
-            <form onSubmit={handleCreateActivity} className="space-y-2 text-xs">
+            <form onSubmit={handleCreateActivity} className="p-3.5 space-y-2 text-xs flex-1 overflow-y-auto">
               <div>
                 <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                   Parent Phase
@@ -747,7 +747,7 @@ export const WBSView: React.FC<WBSViewProps> = ({
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div>
                   <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     WBS Code
@@ -802,7 +802,7 @@ export const WBSView: React.FC<WBSViewProps> = ({
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div>
                   <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Start Date

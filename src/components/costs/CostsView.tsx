@@ -490,7 +490,7 @@ export const CostsView: React.FC<CostsViewProps> = ({
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div>
                   <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Cost Category *
@@ -525,7 +525,7 @@ export const CostsView: React.FC<CostsViewProps> = ({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div>
                   <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Amount (CAD) *
@@ -557,7 +557,7 @@ export const CostsView: React.FC<CostsViewProps> = ({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div>
                   <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Supplier / Payee *

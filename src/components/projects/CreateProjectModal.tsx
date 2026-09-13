@@ -259,7 +259,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
           </div>
 
           {/* Physical specs & Financial baselines */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
             <div>
               <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                 Floor Area (m²) *

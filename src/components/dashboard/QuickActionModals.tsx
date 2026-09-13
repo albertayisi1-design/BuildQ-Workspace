@@ -90,10 +90,10 @@ export const AddLabourModal: React.FC<AddLabourModalProps> = ({ isOpen, onClose,
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 bg-slate-950/60 backdrop-blur-xs">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-[360px] overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 bg-slate-950/60 backdrop-blur-xs overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-[380px] max-h-[92vh] flex flex-col overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-3.5 py-2.5 bg-[#0F172A] text-white flex items-center justify-between">
+        <div className="px-3.5 py-2.5 bg-[#0F172A] text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
               <HardHat className="w-3.5 h-3.5" />
@@ -109,7 +109,7 @@ export const AddLabourModal: React.FC<AddLabourModalProps> = ({ isOpen, onClose,
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-3.5 space-y-2 text-xs">
+        <form onSubmit={handleSubmit} className="p-3.5 space-y-2 text-xs flex-1 overflow-y-auto">
           <div>
             <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
               Project *
@@ -128,7 +128,7 @@ export const AddLabourModal: React.FC<AddLabourModalProps> = ({ isOpen, onClose,
             </select>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
               <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
                 Trade Role *
@@ -305,10 +305,10 @@ export const AddMaterialModal: React.FC<AddMaterialModalProps> = ({ isOpen, onCl
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 bg-slate-950/60 backdrop-blur-xs">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-[360px] overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 bg-slate-950/60 backdrop-blur-xs overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-[380px] max-h-[92vh] flex flex-col overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-3.5 py-2.5 bg-[#0F172A] text-white flex items-center justify-between">
+        <div className="px-3.5 py-2.5 bg-[#0F172A] text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
               <Boxes className="w-3.5 h-3.5" />
@@ -324,7 +324,7 @@ export const AddMaterialModal: React.FC<AddMaterialModalProps> = ({ isOpen, onCl
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-3.5 space-y-2 text-xs">
+        <form onSubmit={handleSubmit} className="p-3.5 space-y-2 text-xs flex-1 overflow-y-auto">
           <div>
             <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
               Target Project *
@@ -343,7 +343,7 @@ export const AddMaterialModal: React.FC<AddMaterialModalProps> = ({ isOpen, onCl
             </select>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
               <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
                 Material Item *
@@ -376,7 +376,7 @@ export const AddMaterialModal: React.FC<AddMaterialModalProps> = ({ isOpen, onCl
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
               <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
                 Supplier *
@@ -509,10 +509,10 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({ isOpen, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 bg-slate-950/60 backdrop-blur-xs">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-[360px] overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 bg-slate-950/60 backdrop-blur-xs overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-[380px] max-h-[92vh] flex flex-col overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-3.5 py-2.5 bg-[#0F172A] text-white flex items-center justify-between">
+        <div className="px-3.5 py-2.5 bg-[#0F172A] text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
               <Receipt className="w-3.5 h-3.5" />
@@ -528,7 +528,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({ isOpen, onClos
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-3.5 space-y-2 text-xs">
+        <form onSubmit={handleSubmit} className="p-3.5 space-y-2 text-xs flex-1 overflow-y-auto">
           <div>
             <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
               Project *
@@ -547,7 +547,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({ isOpen, onClos
             </select>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
               <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
                 Expense Type *
@@ -587,7 +587,7 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({ isOpen, onClos
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
               <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
                 Payee / Vendor *
@@ -740,10 +740,10 @@ export const TakePhotoModal: React.FC<TakePhotoModalProps> = ({ isOpen, onClose,
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 bg-slate-950/60 backdrop-blur-xs">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-[360px] overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 bg-slate-950/60 backdrop-blur-xs overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-[380px] max-h-[92vh] flex flex-col overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-3.5 py-2.5 bg-[#0F172A] text-white flex items-center justify-between">
+        <div className="px-3.5 py-2.5 bg-[#0F172A] text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400">
               <Camera className="w-3.5 h-3.5" />
@@ -759,8 +759,8 @@ export const TakePhotoModal: React.FC<TakePhotoModalProps> = ({ isOpen, onClose,
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-3.5 space-y-2 text-xs">
-          <div className="grid grid-cols-2 gap-2">
+        <form onSubmit={handleSubmit} className="p-3.5 space-y-2 text-xs flex-1 overflow-y-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
               <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
                 Project *
