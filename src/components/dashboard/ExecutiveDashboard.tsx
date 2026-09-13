@@ -37,6 +37,7 @@ import {
   Camera,
   Calculator,
   Plus,
+  X,
 } from 'lucide-react';
 import { CreateProjectModal } from '../projects/CreateProjectModal';
 import {
@@ -67,7 +68,7 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
   onNavigate,
   onOpenNewProject,
 }) => {
-  const { projects, clients, costs, settings, historicalProjects } = useBuild();
+  const { projects, clients, costs, settings, historicalProjects, milestones } = useBuild();
 
   // Primary KPI calculations
   const kpis = useMemo(() => {
@@ -217,7 +218,7 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
     }, 4000);
   };
 
-  const handleDownloadPdf = async (format: 'multipage' | 'single' = 'multipage') => {
+  const handleDownloadPdf = async (format: 'vector' | 'multipage' | 'single' = 'vector') => {
     if (!dashboardRef.current || isGeneratingPdf) return;
     setIsGeneratingPdf(true);
     setPdfProgress('Initializing...');
@@ -226,15 +227,20 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
       await exportDashboardToPdf({
         element: dashboardRef.current,
         format,
-        reportTitle: 'BuildSuite OS — Executive Dashboard & Portfolio Financial Summary',
+        reportTitle: 'EXECUTIVE DASHBOARD & PORTFOLIO FINANCIAL SUMMARY',
         filename: `Executive_Dashboard_Summary_${new Date().toISOString().split('T')[0]}.pdf`,
         onProgress: (status) => setPdfProgress(status),
+        projects,
+        settings,
+        costs,
+        milestones,
+        clients,
       });
       setShowSuccessToast(true);
       setTimeout(() => setShowSuccessToast(false), 4500);
     } catch (err) {
       console.error('Failed to generate PDF summary:', err);
-      alert('Unable to generate PDF summary. Please ensure browser permissions allow canvas capture.');
+      triggerToast('Unable to generate PDF summary. Please try again.');
     } finally {
       setIsGeneratingPdf(false);
       setPdfProgress('');
@@ -249,53 +255,43 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
         data-html2canvas-ignore="true"
       >
         <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none w-full max-w-full touch-pan-x shrink-0">
-          {/* Executive PDF Dropdown Button */}
-          <div className="relative">
+          {/* Executive PDF Split Button: Direct click exports immediately, arrow opens format selection */}
+          <div className="inline-flex items-center rounded-lg bg-slate-800/90 border border-slate-700 shadow-2xs overflow-hidden shrink-0">
             <button
               id="btn-download-pdf-brief"
-              onClick={() => setShowFormatDropdown(!showFormatDropdown)}
+              onClick={() => handleDownloadPdf('vector')}
               disabled={isGeneratingPdf}
-              className="h-7.5 px-2.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-200 text-[11px] font-semibold inline-flex items-center gap-1.5 transition-all border border-slate-700 cursor-pointer shadow-2xs whitespace-nowrap"
-              title="Download Executive Summary PDF report"
+              className="h-7.5 px-2.5 hover:bg-slate-700 active:bg-slate-600 text-slate-200 text-[11px] font-semibold inline-flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap disabled:opacity-85"
+              title="Download Executive Summary PDF report (Click to export immediately)"
             >
               {isGeneratingPdf ? (
                 <>
-                  <Loader2 className="w-3 h-3 text-cyan-400 animate-spin" />
-                  <span className="font-mono text-[10px]">{pdfProgress || 'Exporting...'}</span>
+                  <Loader2 className="w-3.5 h-3.5 text-cyan-400 animate-spin" />
+                  <span className="font-mono text-[10px] text-cyan-300">{pdfProgress || 'Exporting...'}</span>
                 </>
               ) : (
                 <>
-                  <FileDown className="w-3.5 h-3.5 text-cyan-400" />
+                  <FileDown className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
                   <span>Executive PDF</span>
-                  <ChevronDown className="w-2.5 h-2.5 text-slate-400" />
                 </>
               )}
             </button>
 
-            {showFormatDropdown && !isGeneratingPdf && (
-              <div className="absolute right-0 mt-1.5 w-56 bg-slate-900 border border-slate-700 rounded-xl shadow-xl z-50 py-1 text-xs text-slate-200">
-                <button
-                  onClick={() => handleDownloadPdf('multipage')}
-                  className="w-full text-left px-3 py-2 hover:bg-slate-800 flex items-start gap-2 cursor-pointer text-slate-200 transition-colors border-b border-slate-800"
-                >
-                  <FileText className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
-                  <div>
-                    <div className="font-bold text-white text-xs">Multi-Page Dossier</div>
-                    <div className="text-[10px] text-slate-400">Structured A4 portfolio report</div>
-                  </div>
-                </button>
-                <button
-                  onClick={() => handleDownloadPdf('single')}
-                  className="w-full text-left px-3 py-2 hover:bg-slate-800 flex items-start gap-2 cursor-pointer text-slate-200 transition-colors"
-                >
-                  <Download className="w-3.5 h-3.5 text-lime-400 shrink-0 mt-0.5" />
-                  <div>
-                    <div className="font-bold text-white text-xs">Single Snapshot Page</div>
-                    <div className="text-[10px] text-slate-400">Condensed visual scorecard</div>
-                  </div>
-                </button>
-              </div>
-            )}
+            {/* Chevron toggle for format modal (Unclipped) */}
+            <button
+              id="btn-toggle-pdf-options"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowFormatDropdown((prev) => !prev);
+              }}
+              disabled={isGeneratingPdf}
+              className="h-7.5 px-1.5 hover:bg-slate-700 active:bg-slate-600 border-l border-slate-700/80 text-slate-400 hover:text-slate-200 transition-colors cursor-pointer flex items-center justify-center shrink-0 disabled:opacity-60"
+              title="Select PDF export format & layout"
+              aria-label="Executive PDF options"
+            >
+              <ChevronDown className="w-3 h-3" />
+            </button>
           </div>
 
           <div className="h-4 w-px bg-slate-800 mx-0.5 hidden sm:block" />
@@ -642,20 +638,22 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
         onSelectProject={onSelectProject}
       />
 
-      {/* Parametric Cost Benchmark */}
-      <ParametricCostStudio
-        onNavigate={onNavigate}
-        onOpenNewProjectWithParams={(params) => {
-          if (onOpenNewProject) {
-            onOpenNewProject();
-          } else {
-            onNavigate('projects');
-          }
-        }}
-      />
+      {/* Parametric Cost Benchmark - hidden from visual canvas snapshot */}
+      <div data-html2canvas-ignore="true">
+        <ParametricCostStudio
+          onNavigate={onNavigate}
+          onOpenNewProjectWithParams={(params) => {
+            if (onOpenNewProject) {
+              onOpenNewProject();
+            } else {
+              onNavigate('projects');
+            }
+          }}
+        />
+      </div>
 
       {/* Project Performance Ledger Table */}
-      <div className="bento-card overflow-hidden flex flex-col">
+      <div id="section-active-project-performance-ledger" className="bento-card overflow-hidden flex flex-col">
         <div className="bento-header bg-slate-50/60">
           <div>
             <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider ">
@@ -802,6 +800,128 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
             </div>
             <div className="text-slate-300 text-[11px]">
               {quickActionToast}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Executive PDF Format Selection Modal (Never clipped by overflow) */}
+      {showFormatDropdown && !isGeneratingPdf && (
+        <div
+          data-html2canvas-ignore="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-150"
+          onClick={() => setShowFormatDropdown(false)}
+        >
+          <div
+            className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-5 w-full max-w-md space-y-4 text-white animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-cyan-950/80 border border-cyan-700/50 flex items-center justify-center text-cyan-400">
+                  <FileDown className="w-4.5 h-4.5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">Executive PDF Export Format</h3>
+                  <p className="text-[11px] text-slate-400">Select reporting layout for download</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowFormatDropdown(false)}
+                className="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+                title="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-2.5">
+              <button
+                id="btn-format-vector"
+                onClick={() => {
+                  setShowFormatDropdown(false);
+                  handleDownloadPdf('vector');
+                }}
+                className="w-full text-left p-3 rounded-xl bg-slate-850 hover:bg-slate-800 border border-cyan-500/50 hover:border-cyan-400 flex items-start gap-3 transition-all cursor-pointer group shadow-xs"
+              >
+                <div className="w-8 h-8 rounded-lg bg-cyan-950 text-cyan-400 border border-cyan-800/80 flex items-center justify-center shrink-0 mt-0.5">
+                  <FileText className="w-4 h-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-bold text-white text-xs group-hover:text-cyan-300">
+                      Executive Vector Dossier
+                    </span>
+                    <span className="text-[9px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-1.5 py-0.5 rounded font-mono font-bold">
+                      Recommended
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                    Complete A4 dossier featuring Cost Distribution, Schedule Milestone Execution, Active Project Performance Ledger, and audit sign-off.
+                  </p>
+                </div>
+              </button>
+
+              <button
+                id="btn-format-multipage"
+                onClick={() => {
+                  setShowFormatDropdown(false);
+                  handleDownloadPdf('multipage');
+                }}
+                className="w-full text-left p-3 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700 hover:border-cyan-500/60 flex items-start gap-3 transition-all cursor-pointer group shadow-xs"
+              >
+                <div className="w-8 h-8 rounded-lg bg-slate-900 text-slate-300 border border-slate-700 flex items-center justify-center shrink-0 mt-0.5">
+                  <Download className="w-4 h-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-bold text-white text-xs group-hover:text-cyan-300">
+                      Multi-Page Visual Dossier
+                    </span>
+                    <span className="text-[9px] bg-slate-900 text-slate-300 border border-slate-700 px-1.5 py-0.5 rounded font-mono font-bold">
+                      Visual
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                    Visual snapshot capture of the rendered dashboard interface across paginated A4 sheets.
+                  </p>
+                </div>
+              </button>
+
+              <button
+                id="btn-format-single"
+                onClick={() => {
+                  setShowFormatDropdown(false);
+                  handleDownloadPdf('single');
+                }}
+                className="w-full text-left p-3 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700 hover:border-lime-500/60 flex items-start gap-3 transition-all cursor-pointer group shadow-xs"
+              >
+                <div className="w-8 h-8 rounded-lg bg-lime-950 text-lime-400 border border-lime-800/60 flex items-center justify-center shrink-0 mt-0.5">
+                  <Download className="w-4 h-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-bold text-white text-xs group-hover:text-lime-300">
+                      Single Snapshot Page
+                    </span>
+                    <span className="text-[9px] bg-lime-950 text-lime-400 border border-lime-800 px-1.5 py-0.5 rounded font-mono font-bold">
+                      Briefing
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                    Condensed 1-page high-resolution visual scorecard fitted to a single A4 page for rapid executive review.
+                  </p>
+                </div>
+              </button>
+            </div>
+
+            <div className="pt-2 border-t border-slate-800 flex justify-end">
+              <button
+                onClick={() => setShowFormatDropdown(false)}
+                className="px-3 py-1.5 rounded-lg text-xs text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

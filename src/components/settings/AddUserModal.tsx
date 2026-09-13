@@ -16,6 +16,10 @@ import {
   Briefcase,
   Wrench,
   AtSign,
+  Lock,
+  Copy,
+  ExternalLink,
+  CheckCircle2,
 } from 'lucide-react';
 
 interface AddUserModalProps {
@@ -29,35 +33,40 @@ const CORPORATE_ROLES: {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   description: string;
+  tier: string;
 }[] = [
   {
     role: 'admin',
-    label: 'Admin',
+    label: 'Administrator',
     icon: Shield,
-    description: 'Full system governance, user provisioning & security audits',
+    description: 'Executive governance, security audits, credential provisioning, and system parameter controls',
+    tier: 'Governance',
   },
   {
     role: 'pm',
-    label: 'PM (Project Manager)',
+    label: 'Project Manager (PM)',
     icon: HardHat,
-    description: 'Project budgets, WBS milestones, contractor coordination & cost approvals',
+    description: 'Project budgets, WBS baselines, trade contractor coordination, and progress cost approvals',
+    tier: 'Operations',
   },
   {
     role: 'engineer',
-    label: 'Engineer',
+    label: 'Site Engineer',
     icon: Wrench,
-    description: 'Engineering specifications, design reviews, field inspections & technical logs',
+    description: 'Engineering specifications, structural reviews, field inspection diaries, and technical QA/QC',
+    tier: 'Technical',
   },
   {
     role: 'finance',
-    label: 'Finance',
+    label: 'Fiscal / Finance Officer',
     icon: Calculator,
-    description: 'Cost accounting, budget tracking, financial ledger audits & forecasting',
+    description: 'General ledger reconciliation, cost audit variances, progress invoicing, and holdback approvals',
+    tier: 'Fiscal',
   },
 ];
 
 export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose, onUserCreated }) => {
-  const { createUser } = useBuild();
+  const { createUser, sendUserVerificationEmail } = useBuild();
   const { currentUser } = useAuth();
 
   const [name, setName] = useState('');
@@ -67,9 +76,15 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose, onU
   const [department, setDepartment] = useState('Project Operations');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('BuildIQ2026!');
-  const [status, setStatus] = useState<'active' | 'inactive'>('active');
+  const [sendVerificationLink, setSendVerificationLink] = useState(true);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [dispatchedDetails, setDispatchedDetails] = useState<{
+    user: User;
+    verificationUrl: string;
+    token: string;
+  } | null>(null);
+  const [copied, setCopied] = useState(false);
 
   if (!isOpen) return null;
 
@@ -85,12 +100,12 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose, onU
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
     if (!name.trim()) {
-      setError('Full name is required.');
+      setError('Full legal name is required.');
       return;
     }
 
@@ -100,7 +115,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose, onU
       .trim();
 
     if (!cleanUsername) {
-      setError('A valid username is required for login.');
+      setError('A valid username is required for corporate authentication.');
       return;
     }
 
@@ -110,9 +125,11 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose, onU
     }
 
     if (!['admin', 'pm', 'engineer', 'finance'].includes(role)) {
-      setError('Only Admin, PM, Engineer, and Finance roles can be assigned to corporate users.');
+      setError('Only certified Admin, PM, Engineer, and Finance roles may be provisioned.');
       return;
     }
+
+    setIsLoading(true);
 
     try {
       const newUser = createUser({
@@ -122,282 +139,410 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose, onU
         role,
         department,
         phone: phone.trim() || undefined,
-        password: password.trim() || 'password123',
-        status,
+        password: password.trim() || 'BuildIQ2026!',
+        status: sendVerificationLink ? 'pending_verification' : 'active',
+        email_verified: !sendVerificationLink,
         created_at: new Date().toISOString(),
         created_by: currentUser?.name || 'System Administrator',
       });
 
-      setSuccess(true);
       if (onUserCreated) {
         onUserCreated(newUser);
       }
 
-      setTimeout(() => {
-        setSuccess(false);
+      if (sendVerificationLink) {
+        const dispatchResult = await sendUserVerificationEmail(newUser);
+        setDispatchedDetails({
+          user: newUser,
+          verificationUrl: dispatchResult.verificationUrl,
+          token: dispatchResult.token,
+        });
+      } else {
         onClose();
-        // Reset form
         setName('');
         setUsername('');
         setEmail('');
         setRole('pm');
         setDepartment('Project Operations');
         setPhone('');
-      }, 1200);
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to create user account');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const getRoleBadge = (r: UserRole) => {
-    switch (r) {
-      case 'admin':
-        return { label: 'Admin', icon: Shield, color: 'border-purple-200 bg-purple-50 text-purple-800' };
-      case 'pm':
-      case 'project_manager':
-        return { label: 'PM', icon: HardHat, color: 'border-cyan-200 bg-cyan-50 text-cyan-800' };
-      case 'engineer':
-      case 'engineers':
-        return { label: 'Engineer', icon: Wrench, color: 'border-indigo-200 bg-indigo-50 text-indigo-800' };
-      case 'finance':
-        return { label: 'Finance', icon: Calculator, color: 'border-emerald-200 bg-emerald-50 text-emerald-800' };
-      default:
-        return { label: 'Team Member', icon: Shield, color: 'border-slate-200 bg-slate-50 text-slate-800' };
+  const handleCopyLink = () => {
+    if (dispatchedDetails?.verificationUrl) {
+      navigator.clipboard.writeText(dispatchedDetails.verificationUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3000);
     }
+  };
+
+  const handleFinish = () => {
+    setDispatchedDetails(null);
+    onClose();
+    setName('');
+    setUsername('');
+    setEmail('');
+    setRole('pm');
+    setDepartment('Project Operations');
+    setPhone('');
   };
 
   return (
     <div
       id="modal-add-user"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs overflow-y-auto"
-      onClick={onClose}
+      onClick={handleFinish}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden my-8 animate-fadeIn"
+        className="bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden my-8 animate-fadeIn"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="bg-linear-to-r from-cyan-600 via-teal-600 to-lime-600 p-5 text-white flex items-center justify-between border-b border-cyan-700/30">
+        {/* Formal Executive Header */}
+        <div className="bg-slate-900 p-4 sm:p-5 text-white flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/20 border border-white/30 flex items-center justify-center text-white">
-              <UserPlus className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-200">
+              <UserPlus className="w-5 h-5 text-slate-200" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white ">
-                Provision New User Account
+              <h3 className="text-sm sm:text-base font-bold text-white tracking-tight">
+                Provision Corporate User Account
               </h3>
-              <p className="text-xs text-white/90">
-                Authorized role assignment &amp; staff credential provisioning
+              <p className="text-[11px] text-slate-400">
+                Official role-based access authorization &amp; credential provisioning
               </p>
             </div>
           </div>
           <button
-            onClick={onClose}
-            className="text-white/80 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+            onClick={handleFinish}
+            className="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+            title="Close"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-5 space-y-4 text-xs">
-          {error && (
-            <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg flex items-center gap-2 text-rose-700">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{error}</span>
+        {/* Modal Body */}
+        {dispatchedDetails ? (
+          <div className="p-5 space-y-4 text-xs">
+            <div className="text-center py-2">
+              <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-2">
+                <CheckCircle2 className="w-6 h-6" />
+              </div>
+              <h4 className="text-base font-bold text-slate-900">
+                Account Provisioned &amp; Email Dispatched!
+              </h4>
+              <p className="text-xs text-slate-600 mt-0.5 max-w-sm mx-auto">
+                An official email link for verification and password configuration has been sent to{' '}
+                <strong className="text-slate-900 font-mono">{dispatchedDetails.user.email}</strong>.
+              </p>
             </div>
-          )}
 
-          {success && (
-            <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center gap-2 text-emerald-700 font-semibold">
-              <Check className="w-4 h-4 shrink-0" />
-              <span>User account successfully created and active!</span>
-            </div>
-          )}
-
-          {/* Full Name, Username & Email */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Full Name *
-              </label>
-              <div className="relative">
-                <UserIcon className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Jordan Tremblay"
-                  value={name}
-                  onChange={(e) => handleNameChange(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-1 focus:ring-cyan-500 bg-white text-xs"
-                />
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-2 text-[11px]">
+              <div className="flex justify-between">
+                <span className="text-slate-500 font-medium">Provisioned User:</span>
+                <span className="font-bold text-slate-900">{dispatchedDetails.user.name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500 font-medium">Username:</span>
+                <span className="font-mono text-slate-800">@{dispatchedDetails.user.username}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500 font-medium">Authorized Role:</span>
+                <span className="uppercase font-mono font-bold text-[10px] bg-slate-200 px-1.5 py-0.5 rounded text-slate-800">
+                  {dispatchedDetails.user.role}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500 font-medium">Verification Status:</span>
+                <span className="text-amber-700 font-semibold bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">
+                  Pending User Setup
+                </span>
               </div>
             </div>
 
-            <div>
-              <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Username (for Login) *
-              </label>
-              <div className="relative">
-                <AtSign className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. jtremblay"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, ''))}
-                  className="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-1 focus:ring-cyan-500 bg-white text-xs font-mono"
-                />
+            {/* Link Box for instant verification / testing */}
+            <div className="bg-sky-50 border border-sky-200 rounded-lg p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-sky-900">
+                  Activation Link (Tokenized):
+                </span>
+                <span className="text-[10px] text-sky-700">Valid for 48 hours</span>
+              </div>
+              <div className="p-2 bg-white rounded border border-sky-200 font-mono text-[10px] text-slate-700 break-all select-all">
+                {dispatchedDetails.verificationUrl}
+              </div>
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={handleCopyLink}
+                  className="flex-1 py-1.5 px-3 bg-white hover:bg-slate-50 text-slate-800 font-semibold rounded border border-slate-300 transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs text-[11px]"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      <span className="text-emerald-700 font-bold">Link Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5 text-slate-500" />
+                      <span>Copy Setup Link</span>
+                    </>
+                  )}
+                </button>
+
+                <a
+                  href={dispatchedDetails.verificationUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="py-1.5 px-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs text-[11px]"
+                >
+                  <span>Open Setup Page</span>
+                  <ExternalLink className="w-3 h-3 text-slate-300" />
+                </a>
               </div>
             </div>
 
-            <div>
-              <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Corporate Email *
-              </label>
-              <div className="relative">
-                <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="email"
-                  required
-                  placeholder="j.tremblay@buildiq.ca"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-1 focus:ring-cyan-500 bg-white text-xs"
-                />
-              </div>
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={handleFinish}
+                className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg text-xs transition-colors cursor-pointer shadow-sm"
+              >
+                Done &amp; Return to Directory
+              </button>
             </div>
           </div>
+        ) : (
+          /* Form Body */
+          <form onSubmit={handleSubmit} className="p-5 space-y-4 text-xs">
+            {error && (
+              <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg flex items-center gap-2 text-rose-700 text-xs">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
 
-          {/* Role Selection */}
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">
-                Corporate Role &amp; Security Level *
-              </label>
-              <span className="text-[10px] font-mono text-cyan-800 bg-cyan-50 px-2 py-0.5 rounded border border-cyan-200 font-semibold">
-                Admin, PM, Engineer, Finance Only
-              </span>
+            {/* Name & Corporate Email */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                  Full Legal Name *
+                </label>
+                <div className="relative">
+                  <UserIcon className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. David Vance"
+                    value={name}
+                    onChange={(e) => handleNameChange(e.target.value)}
+                    className="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white text-xs text-slate-900"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                  Corporate Email *
+                </label>
+                <div className="relative">
+                  <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    required
+                    placeholder="david.vance@buildiq.ca"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white text-xs text-slate-900"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {CORPORATE_ROLES.map((item) => {
-                const Icon = item.icon;
-                const isSelected = role === item.role;
-                return (
-                  <button
-                    key={item.role}
-                    type="button"
-                    onClick={() => setRole(item.role)}
-                    className={`p-2.5 rounded-lg border text-left flex items-start gap-2.5 transition-all cursor-pointer ${
-                      isSelected
-                        ? 'border-cyan-500 bg-cyan-500/10 text-slate-900 ring-2 ring-cyan-500/40 shadow-xs'
-                        : 'border-slate-200 bg-slate-50/50 hover:bg-slate-100 text-slate-600'
-                    }`}
-                  >
-                    <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${isSelected ? 'text-cyan-600 font-bold' : 'text-slate-400'}`} />
-                    <div>
-                      <div className="font-bold text-xs flex items-center gap-1.5">
-                        <span>{item.label}</span>
-                        {isSelected && <Check className="w-3 h-3 text-cyan-600" />}
+
+            {/* Username & Department */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                  System Username *
+                </label>
+                <div className="relative">
+                  <AtSign className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    required
+                    placeholder="david_v"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white font-mono text-xs text-slate-900"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                  Department / Unit
+                </label>
+                <div className="relative">
+                  <Briefcase className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Project Operations"
+                    value={department}
+                    onChange={(e) => setDepartment(e.target.value)}
+                    className="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white text-xs text-slate-900"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Certified Role Selection */}
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                Authorized Governance Role *
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {CORPORATE_ROLES.map((r) => {
+                  const Icon = r.icon;
+                  const isSelected = role === r.role;
+                  return (
+                    <div
+                      key={r.role}
+                      onClick={() => setRole(r.role)}
+                      className={`p-2.5 rounded-lg border text-left cursor-pointer transition-all ${
+                        isSelected
+                          ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
+                          : 'bg-white border-slate-200 hover:border-slate-300 text-slate-800'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Icon
+                            className={`w-3.5 h-3.5 ${isSelected ? 'text-sky-400' : 'text-slate-500'}`}
+                          />
+                          <span className="font-bold text-xs">{r.label}</span>
+                        </div>
+                        <span
+                          className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold uppercase ${
+                            isSelected
+                              ? 'bg-slate-800 text-slate-300'
+                              : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
+                          {r.tier}
+                        </span>
                       </div>
-                      <div className="text-[10px] text-slate-500 mt-0.5 leading-tight">
-                        {item.description}
-                      </div>
+                      <p
+                        className={`text-[10px] mt-1 leading-snug line-clamp-2 ${
+                          isSelected ? 'text-slate-300' : 'text-slate-500'
+                        }`}
+                      >
+                        {r.description}
+                      </p>
                     </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Department & Phone */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Department / Team
-              </label>
-              <div className="relative">
-                <Briefcase className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="e.g. Estimating &amp; Controls"
-                  value={department}
-                  onChange={(e) => setDepartment(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-1 focus:ring-amber-500 bg-white text-xs"
-                />
+                  );
+                })}
               </div>
             </div>
 
+            {/* Contact Phone */}
             <div>
-              <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">
                 Contact Phone
               </label>
               <div className="relative">
-                <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="+1 (416) 555-0188"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-1 focus:ring-amber-500 bg-white text-xs"
+                  className="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white text-xs"
                 />
               </div>
             </div>
-          </div>
 
-          {/* Status & Default Password */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Account Status
+            {/* Email Verification Link Checkbox - Key Feature */}
+            <div className="p-3 bg-sky-50/80 border border-sky-200 rounded-lg space-y-2">
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={sendVerificationLink}
+                  onChange={(e) => setSendVerificationLink(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 cursor-pointer"
+                />
+                <div>
+                  <div className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+                    <Mail className="w-3.5 h-3.5 text-sky-700" />
+                    <span>Send email link to user email for verification and password setting</span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                    Dispatches an official invitation email with a secure token link. The user will click the link to verify their corporate email and configure their password.
+                  </p>
+                </div>
               </label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value as any)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white text-xs"
+            </div>
+
+            {/* Fallback password if email verification is unticked */}
+            {!sendVerificationLink && (
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg space-y-2">
+                <label className="block text-[11px] font-semibold text-amber-900 uppercase tracking-wider">
+                  Initial Temporary Password
+                </label>
+                <div className="relative">
+                  <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-8 pr-3 py-1.5 border border-amber-300 rounded-lg font-mono text-xs bg-white text-slate-800"
+                  />
+                </div>
+                <p className="text-[10px] text-amber-800">
+                  You will need to manually communicate this password to the user.
+                </p>
+              </div>
+            )}
+
+            {/* Governance Notice */}
+            <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-[11px] text-slate-600 space-y-0.5">
+              <div className="font-semibold text-slate-800">Compliance Audit Notice:</div>
+              <div>
+                This account creation will be timestamped and logged under Administrator{' '}
+                <strong className="text-slate-900">{currentUser?.name || 'System Administrator'}</strong>.
+              </div>
+            </div>
+
+            {/* Footer Actions */}
+            <div className="pt-2 flex items-center justify-end gap-2.5 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={onClose}
+                className="h-8.5 px-4 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold cursor-pointer text-xs"
               >
-                <option value="active">Active (Immediate Access)</option>
-                <option value="inactive">Pending / Inactive</option>
-              </select>
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="h-8.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-semibold text-xs shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-900 disabled:opacity-60"
+              >
+                {isLoading ? (
+                  <span className="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <UserPlus className="w-3.5 h-3.5 text-slate-200" />
+                    <span>{sendVerificationLink ? 'Provision & Send Email Link' : 'Provision User'}</span>
+                  </>
+                )}
+              </button>
             </div>
-
-            <div>
-              <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Temporary Password
-              </label>
-              <input
-                type="text"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono text-xs bg-slate-50"
-              />
-            </div>
-          </div>
-
-          {/* Creator Governance Notice */}
-          <div className="p-3 bg-slate-100 rounded-lg text-[11px] text-slate-600">
-            <strong>Governance Audit Notice:</strong> Account creation will be permanently timestamped and logged under Administrator{' '}
-            <span className="font-semibold text-slate-900">{currentUser?.name || 'System Administrator'}</span>.
-          </div>
-
-          {/* Footer Actions */}
-          <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-100">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-5 py-2 rounded-lg bg-linear-to-r from-cyan-600 to-lime-600 hover:from-cyan-700 hover:to-lime-700 text-white font-bold shadow-xs flex items-center gap-1.5 transition-all cursor-pointer "
-            >
-              <UserPlus className="w-4 h-4 text-white" />
-              <span>Create User Account</span>
-            </button>
-          </div>
-        </form>
+          </form>
+        )}
       </div>
     </div>
   );

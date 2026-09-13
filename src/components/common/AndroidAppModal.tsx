@@ -110,16 +110,16 @@ export const AndroidAppModal: React.FC<AndroidAppModalProps> = ({ isOpen, onClos
         className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-3xl overflow-hidden my-6 transition-all"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header with Formal Civil Brand Styling */}
+        {/* Header with Formal Corporate Brand Styling */}
         <div className="bg-slate-900 p-6 text-white relative flex items-start justify-between border-b border-slate-800">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-amber-400 shrink-0 shadow-inner">
-              <Smartphone className="w-6 h-6 text-amber-400" />
+            <div className="w-12 h-12 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-cyan-400 shrink-0 shadow-inner">
+              <Smartphone className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-bold tracking-tight text-white">
-                  LOGICA Civil for Android
+                  BuildIQ Mobile for Android
                 </h2>
                 <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[11px] font-mono font-bold border border-slate-700">
                   v{ANDROID_CONFIG.versionName}

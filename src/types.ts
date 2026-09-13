@@ -19,11 +19,29 @@ export interface User {
   role: UserRole;
   password?: string;
   avatar?: string;
-  status: 'active' | 'inactive';
+  status: 'active' | 'inactive' | 'pending_verification';
   department?: string;
   created_at?: string;
   created_by?: string;
   phone?: string;
+  email_verified?: boolean;
+  verification_token?: string;
+  verification_sent_at?: string;
+}
+
+export interface UserAccessRequest {
+  id: string;
+  name: string;
+  email: string;
+  username: string;
+  role: CorporateRole;
+  department?: string;
+  phone?: string;
+  reason?: string;
+  status: 'pending_verification' | 'verified' | 'approved' | 'rejected';
+  verification_token: string;
+  created_at: string;
+  verified_at?: string;
 }
 
 export interface Client {
@@ -216,11 +234,11 @@ export interface SiteReport {
 
 export interface EmailAlert {
   id: string;
-  report_id: string;
-  project_id: string;
+  report_id?: string;
+  project_id?: string;
   project_name: string;
   project_number?: string;
-  flag: 'critical' | 'delay';
+  flag: 'critical' | 'delay' | 'verification';
   recipient_name: string;
   recipient_email: string;
   recipient_role: string;
@@ -232,15 +250,18 @@ export interface EmailAlert {
   created_at: string;
   sent_at: string;
   message_id: string;
-  metadata: {
-    supervisor: string;
-    date: string;
-    issues: string;
+  metadata?: {
+    supervisor?: string;
+    date?: string;
+    issues?: string;
     weather?: string;
     workers?: number;
     delay_reason?: string;
     activities?: string;
     safety_notes?: string;
+    verification_url?: string;
+    token?: string;
+    action_type?: string;
   };
 }
 

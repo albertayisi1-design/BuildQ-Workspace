@@ -16,6 +16,7 @@ import { ProjectIntelligenceView } from './components/intelligence/ProjectIntell
 import { ReportsView } from './components/reports/ReportsView';
 import { SettingsView } from './components/settings/SettingsView';
 import { LoginView } from './components/auth/LoginView';
+import { VerifyAndSetPasswordView } from './components/auth/VerifyAndSetPasswordView';
 import { MobileBottomNav } from './components/common/MobileBottomNav';
 import { Menu } from 'lucide-react';
 
@@ -31,9 +32,52 @@ function AppContent() {
   const [openSiteReportModal, setOpenSiteReportModal] = useState<boolean>(false);
   const [isAndroidModalOpen, setIsAndroidModalOpen] = useState<boolean>(false);
 
+  // Check for email verification / password setup parameter
+  const [isVerifying, setIsVerifying] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('action') === 'verify_and_set_password' || !!params.get('token');
+    }
+    return false;
+  });
+  const [verifyToken, setVerifyToken] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('token') || '';
+    }
+    return '';
+  });
+  const [verifyEmail, setVerifyEmail] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('email') || '';
+    }
+    return '';
+  });
+
+  // If user opens verification link or requests credential setup
+  if (isVerifying) {
+    return (
+      <VerifyAndSetPasswordView
+        initialToken={verifyToken}
+        initialEmail={verifyEmail}
+        onComplete={() => setIsVerifying(false)}
+        onCancel={() => setIsVerifying(false)}
+      />
+    );
+  }
+
   // If not authenticated, render Login Screen
   if (!isAuthenticated || !currentUser) {
-    return <LoginView />;
+    return (
+      <LoginView
+        onOpenVerify={(tok, em) => {
+          if (tok) setVerifyToken(tok);
+          if (em) setVerifyEmail(em);
+          setIsVerifying(true);
+        }}
+      />
+    );
   }
 
   // Navigate with optional project context

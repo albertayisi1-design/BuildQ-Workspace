@@ -77,6 +77,8 @@ export interface BuildContextType {
   sendSiteReportAlert: (report: SiteReport, flag: 'critical' | 'delay', customNote?: string) => Promise<EmailAlert[]>;
   resendEmailAlert: (alertId: string) => Promise<EmailAlert>;
   sendTestEmailAlert: (email: string, flag: 'critical' | 'delay') => Promise<EmailAlert>;
+  sendUserVerificationEmail: (user: User | { id: string; name: string; email: string; username?: string; role: string; department?: string; verification_token?: string }) => Promise<{ alert: EmailAlert; verificationUrl: string; token: string; firebaseResult?: string }>;
+  verifyUserAndSetPassword: (tokenOrEmail: string, newPassword: string) => Promise<{ success: boolean; user?: User; error?: string }>;
   deleteAlert: (alertId: string) => void;
   clearAlerts: () => void;
   // Intelligence
@@ -431,6 +433,41 @@ export const BuildProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     [currentUser, refreshData]
   );
 
+  const sendUserVerificationEmail = useCallback(
+    async (
+      user:
+        | User
+        | {
+            id: string;
+            name: string;
+            email: string;
+            username?: string;
+            role: string;
+            department?: string;
+            verification_token?: string;
+          }
+    ) => {
+      const res = await notificationService.sendUserVerificationEmail({
+        user,
+        sender: currentUser,
+      });
+      refreshData();
+      return res;
+    },
+    [currentUser, refreshData]
+  );
+
+  const verifyUserAndSetPassword = useCallback(
+    async (tokenOrEmail: string, newPassword: string) => {
+      const res = db.verifyEmailAndSetPassword(tokenOrEmail, newPassword, currentUser);
+      if (res.success) {
+        refreshData();
+      }
+      return res;
+    },
+    [currentUser, refreshData]
+  );
+
   const deleteAlert = useCallback(
     (alertId: string) => {
       db.deleteAlert(alertId);
@@ -624,6 +661,8 @@ export const BuildProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         sendSiteReportAlert,
         resendEmailAlert,
         sendTestEmailAlert,
+        sendUserVerificationEmail,
+        verifyUserAndSetPassword,
         deleteAlert,
         clearAlerts,
         runIntelligence,

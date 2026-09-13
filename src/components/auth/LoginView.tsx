@@ -1,24 +1,40 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useBuild } from '../../context/BuildContext';
+import { db } from '../../services/db';
 import { LogicaLogo } from '../common/LogicaLogo';
+import { RequestAccessModal } from './RequestAccessModal';
 import {
   Lock,
   Eye,
   EyeOff,
   ArrowRight,
   User as UserIcon,
+  Mail,
+  KeyRound,
+  CheckCircle2,
+  AlertCircle,
+  UserPlus,
 } from 'lucide-react';
 
-export const LoginView: React.FC = () => {
+interface LoginViewProps {
+  onOpenVerify?: (token?: string, email?: string) => void;
+}
+
+export const LoginView: React.FC<LoginViewProps> = ({ onOpenVerify }) => {
   const { loginWithCredentials, signInWithGoogle } = useAuth();
+  const { sendUserVerificationEmail } = useBuild();
 
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isResetDispatching, setIsResetDispatching] = useState(false);
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
 
   const handleGoogleSignIn = async () => {
     setErrorMessage(null);
@@ -36,6 +52,7 @@ export const LoginView: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
+    setInfoMessage(null);
 
     const cleanIdentifier = identifier.trim();
     if (!cleanIdentifier) {
@@ -45,7 +62,6 @@ export const LoginView: React.FC = () => {
 
     setIsLoading(true);
     setTimeout(() => {
-      // Pass credentials; fallback to default if password is left blank for standard testing
       const res = loginWithCredentials(cleanIdentifier, password || 'password123');
       setIsLoading(false);
       if (!res.success) {
@@ -54,33 +70,75 @@ export const LoginView: React.FC = () => {
     }, 250);
   };
 
+  const handleForgotPassword = async () => {
+    setErrorMessage(null);
+    setInfoMessage(null);
+
+    const cleanIdentifier = identifier.trim();
+    if (!cleanIdentifier) {
+      setErrorMessage('Please enter your corporate email above to receive a password setup link.');
+      return;
+    }
+
+    setIsResetDispatching(true);
+    try {
+      const existingUser = db.getUserByEmail(cleanIdentifier) || db.getUserByUsername(cleanIdentifier);
+      if (!existingUser) {
+        throw new Error(`No user record found matching "${cleanIdentifier}". Please submit an access request below.`);
+      }
+
+      const res = await sendUserVerificationEmail(existingUser);
+      setInfoMessage(`Verification and password setup link dispatched to ${existingUser.email}. Please check your inbox.`);
+    } catch (err: any) {
+      setErrorMessage(err?.message || 'Failed to dispatch password setup email.');
+    } finally {
+      setIsResetDispatching(false);
+    }
+  };
+
   return (
     <div className="min-h-screen w-full bg-slate-50 flex flex-col justify-center py-4 sm:py-6 px-4 text-slate-900 relative">
       {/* Subtle modern background texture */}
       <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:20px_20px] opacity-30 pointer-events-none" />
 
-      <div className="w-full max-w-[340px] mx-auto relative z-10">
-        {/* Focused Formal Login Form Card - Compact Height */}
+      <div className="w-full max-w-[360px] mx-auto relative z-10">
+        {/* Focused Formal Login Form Card */}
         <div
           id="workspace-sign-in-card"
-          className="bg-white rounded-xl border border-slate-200/90 p-3.5 sm:p-4 shadow-md shadow-slate-200/40"
+          className="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 shadow-md shadow-slate-200/40"
         >
-          <div className="mb-2.5 text-center">
+          <div className="mb-3 text-center">
             <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
               BuildIQ Enterprise Workspace
             </h1>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              Enterprise Access &amp; Credential Authentication
+            </p>
           </div>
 
           {errorMessage && (
-            <div className="mb-2 p-2 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-1.5">
-              <span className="font-bold shrink-0">Notice:</span>
+            <div className="mb-2.5 p-2 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-1.5">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>{errorMessage}</span>
             </div>
           )}
 
-          {/* Primary Form - Reduced Height Credentials Space */}
-          <form onSubmit={handleSubmit} className="space-y-2">
+          {infoMessage && (
+            <div className="mb-2.5 p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-start gap-1.5">
+              <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600" />
+              <span>{infoMessage}</span>
+            </div>
+          )}
+
+          {/* Primary Form */}
+          <form onSubmit={handleSubmit} className="space-y-2.5">
             <div>
+              <label
+                htmlFor="input-login-identifier"
+                className="block text-[11px] font-semibold text-slate-700 mb-1"
+              >
+                Corporate Email or Username
+              </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
                   <UserIcon className="w-3.5 h-3.5" />
@@ -99,23 +157,22 @@ export const LoginView: React.FC = () => {
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-0.5">
+              <div className="flex items-center justify-between mb-1">
                 <label
                   htmlFor="input-login-password"
-                  className="block text-[10px] sm:text-[11px] font-semibold text-slate-700"
+                  className="block text-[11px] font-semibold text-slate-700"
                 >
                   Password
                 </label>
-                <a
-                  href="#forgot"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setErrorMessage('Please contact your system administrator to reset corporate credentials.');
-                  }}
-                  className="text-[10px] sm:text-[11px] text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  disabled={isResetDispatching}
+                  className="text-[11px] text-sky-700 hover:text-sky-900 transition-colors cursor-pointer font-medium disabled:opacity-50"
+                  title="Send password setup link to the email specified above"
                 >
-                  Forgot password?
-                </a>
+                  {isResetDispatching ? 'Sending link...' : 'Send reset link'}
+                </button>
               </div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
@@ -159,21 +216,21 @@ export const LoginView: React.FC = () => {
               id="btn-submit-login"
               type="submit"
               disabled={isLoading}
-              className="w-full mt-0.5 py-1.5 px-3 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 hover:text-slate-900 font-bold text-xs sm:text-sm rounded-lg border border-slate-300 shadow-2xs transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-60"
+              className="w-full mt-1 py-2 px-3 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-bold text-xs sm:text-sm rounded-lg shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-60"
             >
               {isLoading ? (
-                <span className="inline-block w-3.5 h-3.5 border-2 border-slate-800 border-t-transparent rounded-full animate-spin" />
+                <span className="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
                   <span>Sign In to Workspace</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-700" />
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-300" />
                 </>
               )}
             </button>
           </form>
 
           {/* Clean Divider */}
-          <div className="relative my-2">
+          <div className="relative my-3">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-slate-200" />
             </div>
@@ -219,8 +276,32 @@ export const LoginView: React.FC = () => {
             )}
           </button>
 
-          {/* Embedded Logica Softworks Banner without black background */}
-          <div className="mt-2.5 pt-2 border-t border-slate-100 w-full flex flex-col items-center justify-center">
+          {/* New User & Verification Links Section */}
+          <div className="mt-3 pt-2.5 border-t border-slate-100 flex flex-col gap-1.5 text-center text-xs">
+            <button
+              id="btn-open-request-access"
+              type="button"
+              onClick={() => setIsRequestModalOpen(true)}
+              className="text-[11px] text-sky-800 hover:text-sky-950 font-semibold inline-flex items-center justify-center gap-1 cursor-pointer py-1 rounded hover:bg-sky-50 transition-colors"
+            >
+              <UserPlus className="w-3.5 h-3.5 text-sky-600" />
+              <span>New user? Request account &amp; email setup link</span>
+            </button>
+
+            {onOpenVerify && (
+              <button
+                type="button"
+                onClick={() => onOpenVerify()}
+                className="text-[10px] text-slate-500 hover:text-slate-800 cursor-pointer inline-flex items-center justify-center gap-1"
+              >
+                <KeyRound className="w-3 h-3 text-slate-400" />
+                <span>Have an activation token? Complete password setup</span>
+              </button>
+            )}
+          </div>
+
+          {/* Embedded Logica Softworks Banner */}
+          <div className="mt-3 pt-2 border-t border-slate-100 w-full flex flex-col items-center justify-center">
             <LogicaLogo variant="full" size="sm" isDark={false} />
             <p className="text-[9px] font-mono text-slate-400 tracking-wider uppercase mt-0.5">
               Enterprise Solution
@@ -228,6 +309,15 @@ export const LoginView: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Request Access Modal */}
+      <RequestAccessModal
+        isOpen={isRequestModalOpen}
+        onClose={() => setIsRequestModalOpen(false)}
+        onSuccess={(user) => {
+          setInfoMessage(`Account provisioned! Verification link sent to ${user.email}.`);
+        }}
+      />
     </div>
   );
 };

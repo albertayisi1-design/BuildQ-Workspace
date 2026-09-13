@@ -56,10 +56,17 @@ class RelationalDatabaseService {
   private loadFromStorage(): void {
     try {
       const storedUsers = localStorage.getItem(STORAGE_PREFIX + 'users');
+      const storedDecommissioned = localStorage.getItem(STORAGE_PREFIX + 'decommissioned_users');
+      const decommissionedIds: Set<string> = new Set(
+        storedDecommissioned ? JSON.parse(storedDecommissioned) : []
+      );
+
       if (storedUsers) {
         const parsed: User[] = JSON.parse(storedUsers);
-        // Clean out legacy executive user if previously cached
-        const sanitized = parsed.filter((u) => u.id !== 'usr_exec' && u.role !== ('executive' as any));
+        // Clean out legacy executive user if previously cached and decommissioned users
+        const sanitized = parsed.filter(
+          (u) => u.id !== 'usr_exec' && u.role !== ('executive' as any) && !decommissionedIds.has(u.id)
+        );
         // Ensure all users have a username and valid corporate role (admin, pm, engineer, finance)
         sanitized.forEach((u) => {
           const matchInit = INITIAL_USERS.find((iu) => iu.id === u.id);
@@ -77,15 +84,15 @@ class RelationalDatabaseService {
             u.role = 'pm';
           }
         });
-        // Ensure new seed users exist in the list
+        // Ensure new seed users exist in the list, unless explicitly decommissioned
         INITIAL_USERS.forEach((initUser) => {
-          if (!sanitized.some((u) => u.id === initUser.id)) {
+          if (!decommissionedIds.has(initUser.id) && !sanitized.some((u) => u.id === initUser.id)) {
             sanitized.push(initUser);
           }
         });
         this.users = sanitized;
       } else {
-        this.users = [...INITIAL_USERS];
+        this.users = INITIAL_USERS.filter((u) => !decommissionedIds.has(u.id));
       }
 
       const storedClients = localStorage.getItem(STORAGE_PREFIX + 'clients');
@@ -182,6 +189,11 @@ class RelationalDatabaseService {
   }
 
   public resetToSeed(): void {
+    try {
+      localStorage.removeItem(STORAGE_PREFIX + 'decommissioned_users');
+    } catch (err) {
+      console.warn('Error clearing decommissioned users on reset:', err);
+    }
     this.users = [...INITIAL_USERS];
     this.clients = [...INITIAL_CLIENTS];
     this.projects = [...INITIAL_PROJECTS];
@@ -323,6 +335,10 @@ class RelationalDatabaseService {
       throw new Error(`Invalid role. Only "admin", "pm", "engineer", or "finance" can be assigned to corporate users.`);
     }
 
+    const verificationToken =
+      userData.verification_token ||
+      'vtok_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+
     const newUser: User = {
       ...userData,
       role: assignedRole,
@@ -332,6 +348,8 @@ class RelationalDatabaseService {
       created_at: new Date().toISOString(),
       created_by: currentUser?.name || 'System Administrator',
       status: userData.status || 'active',
+      email_verified: userData.email_verified ?? false,
+      verification_token: verificationToken,
     };
     this.users.push(newUser);
     this.addAuditLog(
@@ -343,6 +361,64 @@ class RelationalDatabaseService {
     );
     this.saveToStorage();
     return newUser;
+  }
+
+  public getUserByEmail(email: string): User | undefined {
+    if (!email) return undefined;
+    const cleanEmail = email.trim().toLowerCase();
+    return this.users.find((u) => u.email.toLowerCase() === cleanEmail);
+  }
+
+  public getUserByUsername(username: string): User | undefined {
+    if (!username) return undefined;
+    const cleanUsername = username.trim().toLowerCase().replace(/^@/, '');
+    return this.users.find(
+      (u) => (u.username && u.username.toLowerCase() === cleanUsername) || u.email.toLowerCase().split('@')[0] === cleanUsername
+    );
+  }
+
+  public getUserByVerificationToken(token: string): User | undefined {
+    if (!token) return undefined;
+    const cleanToken = token.trim();
+    return this.users.find((u) => u.verification_token === cleanToken);
+  }
+
+  public verifyEmailAndSetPassword(
+    tokenOrEmail: string,
+    newPassword: string,
+    currentUser: User | null
+  ): { success: boolean; user?: User; error?: string } {
+    if (!tokenOrEmail) {
+      return { success: false, error: 'Verification token or email identifier is required.' };
+    }
+    const clean = tokenOrEmail.trim().toLowerCase();
+    const user = this.users.find(
+      (u) =>
+        (u.verification_token && u.verification_token === tokenOrEmail.trim()) ||
+        u.email.toLowerCase() === clean
+    );
+
+    if (!user) {
+      return {
+        success: false,
+        error: 'Invalid or expired verification token. Please request a new setup email link.',
+      };
+    }
+
+    user.password = newPassword;
+    user.email_verified = true;
+    user.status = 'active';
+    user.verification_token = undefined; // Token consumed
+
+    this.addAuditLog(
+      currentUser || user,
+      'User Email Verified & Password Configured',
+      'auth',
+      user.id,
+      `User ${user.name} (@${user.username}) successfully verified email and configured corporate credentials`
+    );
+    this.saveToStorage();
+    return { success: true, user };
   }
 
   public updateUser(id: string, updates: Partial<User>, currentUser: User | null): User {
@@ -387,6 +463,18 @@ class RelationalDatabaseService {
     const userToDelete = this.users.find((u) => u.id === id);
     if (!userToDelete) return;
     this.users = this.users.filter((u) => u.id !== id);
+
+    try {
+      const storedDecommissioned = localStorage.getItem(STORAGE_PREFIX + 'decommissioned_users');
+      const decommissioned: string[] = storedDecommissioned ? JSON.parse(storedDecommissioned) : [];
+      if (!decommissioned.includes(id)) {
+        decommissioned.push(id);
+        localStorage.setItem(STORAGE_PREFIX + 'decommissioned_users', JSON.stringify(decommissioned));
+      }
+    } catch (err) {
+      console.warn('Error saving decommissioned user record:', err);
+    }
+
     this.addAuditLog(
       currentUser,
       'User Account Removed',

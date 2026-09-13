@@ -583,7 +583,7 @@ export const SiteReportsView: React.FC<SiteReportsViewProps> = ({
                                 <button
                                   type="button"
                                   disabled={isDispatchingInModal}
-                                  onClick={() => handleDispatchAlertForReport(selectedReport, alt.flag, alt.metadata?.delay_reason || alt.metadata?.issues || alt.subject)}
+                                  onClick={() => handleDispatchAlertForReport(selectedReport, alt.flag === 'critical' ? 'critical' : 'delay', alt.metadata?.delay_reason || alt.metadata?.issues || alt.subject)}
                                   className="px-2 py-1 rounded bg-amber-50 hover:bg-amber-100 text-amber-800 font-medium text-[11px] inline-flex items-center gap-1 cursor-pointer transition-colors border border-amber-200"
                                 >
                                   <RefreshCw className={`w-3 h-3 ${isDispatchingInModal ? 'animate-spin' : ''}`} />
