@@ -689,39 +689,39 @@ export const SiteReportsView: React.FC<SiteReportsViewProps> = ({
 
       {/* New Site Report Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-xl max-h-[92vh] flex flex-col overflow-hidden text-slate-900 animate-in fade-in zoom-in-95 duration-150">
-            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-2 overflow-y-auto">
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xl w-full max-w-[420px] max-h-[92vh] flex flex-col overflow-hidden text-slate-900 animate-in fade-in zoom-in-95 duration-150">
+            <div className="px-3.5 py-2.5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-lg bg-amber-100 text-amber-800">
-                  <ClipboardList className="w-5 h-5" />
+                <div className="p-1.5 rounded-lg bg-amber-100 text-amber-800">
+                  <ClipboardList className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 font-display">
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 font-display">
                     Submit Daily Site Report
                   </h3>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-[10px] text-slate-500">
                     Capture daily site operational activity and progress
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-200 cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 p-1 rounded-md hover:bg-slate-200 cursor-pointer"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateReport} className="p-6 overflow-y-auto space-y-4 text-sm flex-1">
+            <form onSubmit={handleCreateReport} className="p-3 overflow-y-auto space-y-2 text-xs flex-1">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                   Project *
                 </label>
                 <select
                   value={modalProjectId}
                   onChange={(e) => setModalProjectId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white font-medium"
+                  className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs bg-white font-medium"
                   required
                 >
                   {projects.map((p) => (
@@ -732,9 +732,9 @@ export const SiteReportsView: React.FC<SiteReportsViewProps> = ({
                 </select>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Date *
                   </label>
                   <input
@@ -742,11 +742,11 @@ export const SiteReportsView: React.FC<SiteReportsViewProps> = ({
                     required
                     value={modalDate}
                     onChange={(e) => setModalDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Weather *
                   </label>
                   <input
@@ -755,12 +755,12 @@ export const SiteReportsView: React.FC<SiteReportsViewProps> = ({
                     value={modalWeather}
                     onChange={(e) => setModalWeather(e.target.value)}
                     placeholder="e.g. Sunny, 21°C"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Workers on Site *
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
+                    Workers *
                   </label>
                   <input
                     type="number"
@@ -768,62 +768,64 @@ export const SiteReportsView: React.FC<SiteReportsViewProps> = ({
                     required
                     value={modalWorkers}
                     onChange={(e) => setModalWorkers(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-mono"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs font-mono"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                   Work Completed Today *
                 </label>
                 <textarea
-                  rows={2}
+                  rows={1.5 as any}
                   required
                   value={modalWorkCompleted}
                   onChange={(e) => setModalWorkCompleted(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs"
+                  className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs resize-none"
                   placeholder="Key milestones, concrete pours, framing progress"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Materials Delivered
-                </label>
-                <input
-                  type="text"
-                  value={modalMaterials}
-                  onChange={(e) => setModalMaterials(e.target.value)}
-                  placeholder="e.g. 50 bundles drywall, 2 tons rebar"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs"
-                />
-              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
+                    Materials Delivered
+                  </label>
+                  <input
+                    type="text"
+                    value={modalMaterials}
+                    onChange={(e) => setModalMaterials(e.target.value)}
+                    placeholder="e.g. 50 bundles drywall"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs"
+                  />
+                </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Delays or Issues
-                </label>
-                <input
-                  type="text"
-                  value={modalDelays}
-                  onChange={(e) => setModalDelays(e.target.value)}
-                  placeholder="e.g. None or Rain stoppage for 2 hours"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs"
-                />
+                <div>
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
+                    Delays or Issues
+                  </label>
+                  <input
+                    type="text"
+                    value={modalDelays}
+                    onChange={(e) => setModalDelays(e.target.value)}
+                    placeholder="e.g. None"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs"
+                  />
+                </div>
               </div>
 
               {/* Safety Toggle */}
-              <div className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
+              <div className="p-2 rounded-lg border border-slate-200 bg-slate-50 space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-700">
-                    Any Safety Incidents or Near Misses?
+                  <span className="text-[10px] font-semibold text-slate-700">
+                    Safety Incidents or Near Misses?
                   </span>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
                     <button
                       type="button"
                       onClick={() => setModalSafetyIncidents(false)}
-                      className={`px-3 py-1 rounded text-xs font-bold cursor-pointer ${
+                      className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer ${
                         !modalSafetyIncidents
                           ? 'bg-emerald-600 text-white'
                           : 'bg-slate-200 text-slate-700'
@@ -834,7 +836,7 @@ export const SiteReportsView: React.FC<SiteReportsViewProps> = ({
                     <button
                       type="button"
                       onClick={() => setModalSafetyIncidents(true)}
-                      className={`px-3 py-1 rounded text-xs font-bold cursor-pointer ${
+                      className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer ${
                         modalSafetyIncidents
                           ? 'bg-rose-600 text-white'
                           : 'bg-slate-200 text-slate-700'
@@ -851,90 +853,83 @@ export const SiteReportsView: React.FC<SiteReportsViewProps> = ({
                     required={modalSafetyIncidents}
                     value={modalSafetyDetails}
                     onChange={(e) => setModalSafetyDetails(e.target.value)}
-                    placeholder="Describe incident, injured parties, corrective actions taken"
-                    className="w-full px-3 py-2 rounded-lg border border-rose-300 text-xs bg-white text-rose-900"
+                    placeholder="Describe incident, corrective actions taken"
+                    className="w-full px-2 py-1 rounded-md border border-rose-300 text-xs bg-white text-rose-900"
                   />
                 )}
               </div>
 
               {/* Operational Flag & PM Notification Trigger */}
-              <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 space-y-2.5">
+              <div className="p-2 rounded-lg border border-slate-200 bg-slate-50 space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="block text-xs font-bold text-slate-800">
-                    Operational Status & PM Alert Trigger
+                  <label className="block text-[10px] font-bold text-slate-800">
+                    Operational Status &amp; PM Alert
                   </label>
-                  <span className="text-[10px] text-slate-500 font-mono">
+                  <span className="text-[9px] text-slate-500 font-mono">
                     Auto-Email Notification
                   </span>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-1.5">
                   <button
                     type="button"
                     onClick={() => setModalFlag('normal')}
-                    className={`py-2 px-2.5 rounded-lg border text-xs font-semibold flex flex-col items-center gap-1 transition-all cursor-pointer ${
+                    className={`py-1 px-1.5 rounded-md border text-[10px] font-semibold flex flex-col items-center gap-0.5 transition-all cursor-pointer ${
                       modalFlag === 'normal'
                         ? 'bg-white border-slate-400 text-slate-800 shadow-2xs ring-1 ring-slate-400'
                         : 'bg-slate-100/70 border-slate-200 text-slate-500 hover:bg-white'
                     }`}
                   >
-                    <CheckCircle className="w-4 h-4 text-emerald-600" />
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
                     <span>Routine</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setModalFlag('delay')}
-                    className={`py-2 px-2.5 rounded-lg border text-xs font-semibold flex flex-col items-center gap-1 transition-all cursor-pointer ${
+                    className={`py-1 px-1.5 rounded-md border text-[10px] font-semibold flex flex-col items-center gap-0.5 transition-all cursor-pointer ${
                       modalFlag === 'delay'
                         ? 'bg-amber-50 border-amber-400 text-amber-950 shadow-2xs ring-1 ring-amber-400 font-bold'
                         : 'bg-slate-100/70 border-slate-200 text-slate-500 hover:bg-amber-50/50'
                     }`}
                   >
-                    <Clock className="w-4 h-4 text-amber-600" />
+                    <Clock className="w-3.5 h-3.5 text-amber-600" />
                     <span>Delay</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setModalFlag('critical')}
-                    className={`py-2 px-2.5 rounded-lg border text-xs font-semibold flex flex-col items-center gap-1 transition-all cursor-pointer ${
+                    className={`py-1 px-1.5 rounded-md border text-[10px] font-semibold flex flex-col items-center gap-0.5 transition-all cursor-pointer ${
                       modalFlag === 'critical'
                         ? 'bg-red-50 border-red-400 text-red-950 shadow-2xs ring-1 ring-red-400 font-bold'
                         : 'bg-slate-100/70 border-slate-200 text-slate-500 hover:bg-red-50/50'
                     }`}
                   >
-                    <AlertTriangle className="w-4 h-4 text-red-600" />
+                    <AlertTriangle className="w-3.5 h-3.5 text-red-600" />
                     <span>Critical</span>
                   </button>
                 </div>
 
                 {modalFlag !== 'normal' && (
-                  <div className="mt-2 space-y-2 animate-in fade-in duration-200">
-                    <div className="p-2.5 rounded-lg bg-amber-50/90 border border-amber-300 text-amber-900 text-xs flex items-start gap-2">
-                      <Mail className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                  <div className="mt-1 space-y-1.5 animate-in fade-in duration-200">
+                    <div className="p-1.5 rounded-md bg-amber-50/90 border border-amber-300 text-amber-900 text-[10px] flex items-start gap-1.5">
+                      <Mail className="w-3.5 h-3.5 text-amber-700 shrink-0 mt-0.5" />
                       <div className="leading-tight">
-                        <strong className="font-bold block text-amber-950">
-                          Automated PM Email Alert Active
-                        </strong>
-                        Submitting this report flagged as{' '}
-                        <span className="font-bold uppercase tracking-wide">
-                          {modalFlag}
-                        </span>{' '}
-                        will immediately dispatch an email notification to the Project Manager (David Chen &lt;david.chen@buildiq.ca&gt;).
+                        <strong className="font-bold text-amber-950">
+                          Automated PM Alert Active:
+                        </strong>{' '}
+                        Flagged as {modalFlag.toUpperCase()} &mdash; will notify PM immediately.
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        PM Alert Summary Note (Included in Email subject & body):
-                      </label>
                       <input
                         type="text"
                         value={modalFlagReason}
                         onChange={(e) => setModalFlagReason(e.target.value)}
-                        placeholder="e.g. 4-hour crane hydraulic pump breakdown causing pour delay"
-                        className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white"
+                        placeholder="Alert summary note (included in email)"
+                        className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs bg-white"
                       />
                     </div>
                   </div>
@@ -943,13 +938,13 @@ export const SiteReportsView: React.FC<SiteReportsViewProps> = ({
 
               {/* Photos Upload */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                   Site Photos
                 </label>
-                <div className="flex items-center gap-3">
-                  <label className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-2 border border-slate-300 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50">
-                    <Camera className="w-4 h-4 text-slate-500" />
-                    <span>Upload Image File</span>
+                <div className="flex items-center gap-2">
+                  <label className="cursor-pointer inline-flex items-center gap-1 px-2 py-1 border border-slate-300 rounded-md text-[10px] font-medium text-slate-700 hover:bg-slate-50">
+                    <Camera className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Upload Image</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -957,15 +952,15 @@ export const SiteReportsView: React.FC<SiteReportsViewProps> = ({
                       className="hidden"
                     />
                   </label>
-                  <span className="text-xs text-slate-400">
-                    {photoUrls.length} image(s) attached
+                  <span className="text-[10px] text-slate-400">
+                    {photoUrls.length} attached
                   </span>
                 </div>
 
                 {photoUrls.length > 0 && (
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="flex items-center gap-1.5 mt-1.5">
                     {photoUrls.map((p, i) => (
-                      <div key={i} className="relative h-12 w-12 rounded border overflow-hidden">
+                      <div key={i} className="relative h-8 w-8 rounded border overflow-hidden">
                         <img src={p} alt="upload" className="w-full h-full object-cover" />
                       </div>
                     ))}
@@ -973,20 +968,20 @@ export const SiteReportsView: React.FC<SiteReportsViewProps> = ({
                 )}
               </div>
 
-              <div className="pt-3 border-t border-slate-200 flex justify-end gap-2">
+              <div className="pt-2 border-t border-slate-200 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border border-slate-300 rounded-lg text-xs text-slate-700 hover:bg-slate-100 cursor-pointer"
+                  className="px-3 py-1 border border-slate-300 rounded-md text-xs text-slate-700 hover:bg-slate-100 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   id="btn-submit-site-report"
                   type="submit"
-                  className="px-5 py-2 bg-cyan-600 hover:bg-lime-500 text-white font-bold rounded-lg text-xs cursor-pointer shadow-xs transition-all "
+                  className="px-3.5 py-1 bg-cyan-600 hover:bg-lime-500 text-white font-bold rounded-md text-xs cursor-pointer shadow-xs transition-all "
                 >
-                  Submit Report {modalFlag !== 'normal' && '& Send PM Alert'}
+                  Submit Report {modalFlag !== 'normal' && '& Alert'}
                 </button>
               </div>
             </form>

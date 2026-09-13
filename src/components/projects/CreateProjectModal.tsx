@@ -94,51 +94,51 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
   return (
     <div
       id="create-project-modal"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-3 overflow-y-auto"
     >
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden text-slate-900 animate-in fade-in zoom-in-95 duration-150">
+      <div className="bg-white rounded-xl border border-slate-200 shadow-2xl w-full max-w-md max-h-[92vh] flex flex-col overflow-hidden text-slate-900 animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-amber-100 text-amber-800">
-              <Building2 className="w-5 h-5" />
+        <div className="px-3.5 py-2.5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-md bg-amber-100 text-amber-800">
+              <Building2 className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 font-display">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 font-display">
                 Create Construction Project
               </h3>
-              <p className="text-xs text-slate-500">
-                Establish project baseline, physical dimensions, and approved budget
+              <p className="text-[10px] text-slate-500">
+                Establish project baseline &amp; approved budget
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-200 transition-colors cursor-pointer"
+            className="text-slate-400 hover:text-slate-700 p-1 rounded-md hover:bg-slate-200 transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-4 text-sm">
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-3.5 space-y-2.5 text-xs">
           {/* Quick preset banner */}
-          <div className="flex items-center justify-between p-3 rounded-xl bg-amber-50 border border-amber-200">
-            <span className="text-xs text-amber-900 font-medium">
-              Demonstration Scenario (600m² / C$1.2M Contract / C$950k Budget)
+          <div className="flex items-center justify-between p-1.5 rounded-lg bg-amber-50 border border-amber-200">
+            <span className="text-[10px] text-amber-900 font-medium truncate">
+              Demo Scenario (600m² / C$1.2M Contract)
             </span>
             <button
               type="button"
               onClick={applyScenarioDefaults}
-              className="text-xs font-bold text-amber-800 hover:underline cursor-pointer"
+              className="text-[10px] font-bold text-amber-800 hover:underline cursor-pointer shrink-0 ml-1"
             >
               Fill Demo Values
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                 Project Name *
               </label>
               <input
@@ -147,13 +147,13 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Riverside Modern Condominiums"
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+                placeholder="e.g. Riverside Condominiums"
+                className="w-full px-2.5 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                 Project Number *
               </label>
               <input
@@ -162,21 +162,21 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 required
                 value={projectNumber}
                 onChange={(e) => setProjectNumber(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm font-mono"
+                className="w-full px-2.5 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs font-mono"
               />
             </div>
           </div>
 
           {/* Client Selection */}
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="block text-xs font-semibold text-slate-700">Client *</label>
+            <div className="flex items-center justify-between mb-0.5">
+              <label className="block text-[10px] font-semibold text-slate-700">Client *</label>
               <button
                 type="button"
                 onClick={() => setIsAddingNewClient(!isAddingNewClient)}
-                className="text-xs text-amber-600 hover:text-amber-700 font-semibold cursor-pointer"
+                className="text-[10px] text-amber-600 hover:text-amber-700 font-semibold cursor-pointer"
               >
-                {isAddingNewClient ? 'Select existing client' : '+ New Client'}
+                {isAddingNewClient ? 'Existing client' : '+ New Client'}
               </button>
             </div>
 
@@ -187,15 +187,15 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 required={isAddingNewClient}
                 value={newClientName}
                 onChange={(e) => setNewClientName(e.target.value)}
-                placeholder="Enter client or organization name"
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+                placeholder="Enter client name"
+                className="w-full px-2.5 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs"
               />
             ) : (
               <select
                 id="sel-project-client"
                 value={clientId}
                 onChange={(e) => setClientId(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white"
+                className="w-full px-2 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs bg-white"
               >
                 {clients.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -206,16 +206,16 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                 Project Type *
               </label>
               <select
                 id="sel-project-type"
                 value={type}
                 onChange={(e) => setType(e.target.value as ProjectType)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white"
+                className="w-full px-2 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs bg-white"
               >
                 <option value="Residential">Residential</option>
                 <option value="Commercial">Commercial</option>
@@ -228,7 +228,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                 Building Type *
               </label>
               <input
@@ -237,13 +237,13 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 required
                 value={buildingType}
                 onChange={(e) => setBuildingType(e.target.value)}
-                placeholder="e.g. Apartment, Townhouse, Clinic"
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+                placeholder="e.g. Apartment"
+                className="w-full px-2.5 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                 Location *
               </label>
               <input
@@ -253,15 +253,15 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="e.g. Toronto, ON"
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+                className="w-full px-2.5 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs"
               />
             </div>
           </div>
 
           {/* Physical specs & Financial baselines */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                 Floor Area (m²) *
               </label>
               <input
@@ -271,12 +271,12 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 required
                 value={floorArea}
                 onChange={(e) => setFloorArea(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm font-mono"
+                className="w-full px-2 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                 Floors
               </label>
               <input
@@ -286,13 +286,13 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 required
                 value={floors}
                 onChange={(e) => setFloors(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm font-mono"
+                className="w-full px-2 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Contract Value (CAD) *
+              <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
+                Contract (CAD) *
               </label>
               <input
                 id="inp-contract-value"
@@ -302,13 +302,13 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 required
                 value={contractValue}
                 onChange={(e) => setContractValue(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm font-mono"
+                className="w-full px-2 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Approved Budget (CAD) *
+              <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
+                Budget (CAD) *
               </label>
               <input
                 id="inp-approved-budget"
@@ -318,14 +318,14 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 required
                 value={approvedBudget}
                 onChange={(e) => setApprovedBudget(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm font-mono"
+                className="w-full px-2 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs font-mono"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                 Start Date *
               </label>
               <input
@@ -334,13 +334,13 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 required
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+                className="w-full px-2 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Planned Completion *
+              <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
+                Planned End *
               </label>
               <input
                 id="inp-planned-completion"
@@ -348,13 +348,13 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 required
                 value={plannedCompletion}
                 onChange={(e) => setPlannedCompletion(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+                className="w-full px-2 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Project Manager *
+              <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
+                PM *
               </label>
               <input
                 id="inp-project-manager"
@@ -362,21 +362,21 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 required
                 value={projectManager}
                 onChange={(e) => setProjectManager(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+                className="w-full px-2 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                 Status
               </label>
               <select
                 id="sel-project-status"
                 value={status}
                 onChange={(e) => setStatus(e.target.value as ProjectStatus)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white"
+                className="w-full px-2 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs bg-white"
               >
                 <option value="Planning">Planning</option>
                 <option value="Active">Active</option>
@@ -387,7 +387,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                 Description
               </label>
               <input
@@ -395,26 +395,26 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                 type="text"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+                className="w-full px-2 py-1 rounded-md border border-slate-300 focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs"
               />
             </div>
           </div>
 
           {/* Action buttons */}
-          <div className="pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
+          <div className="pt-2 border-t border-slate-200 flex items-center justify-end gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 font-medium text-xs cursor-pointer"
+              className="px-3 py-1 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-100 font-medium text-xs cursor-pointer"
             >
               Cancel
             </button>
             <button
               id="btn-submit-create-project"
               type="submit"
-              className="px-5 py-2 rounded-lg bg-cyan-600 hover:bg-lime-500 text-white font-bold text-xs shadow-xs cursor-pointer transition-all "
+              className="px-3.5 py-1 rounded-md bg-cyan-600 hover:bg-lime-500 text-white font-bold text-xs shadow-xs cursor-pointer transition-all"
             >
-              Create Project & Initialize WBS
+              Create Project
             </button>
           </div>
         </form>

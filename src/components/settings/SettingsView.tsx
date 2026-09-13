@@ -941,84 +941,84 @@ export const SettingsView: React.FC = () => {
       {/* SUBTAB 3: SYSTEM & FINANCIAL STANDARDS                                     */}
       {/* ========================================================================= */}
       {activeSubTab === 'system' && (
-        <form onSubmit={handleSaveSettings} className="space-y-5">
+        <form onSubmit={handleSaveSettings} className="space-y-2.5">
           {/* Corporate Profile & Fiscal Ledger Parameters */}
-          <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-xs space-y-4">
-            <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+          <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-3.5 shadow-xs space-y-2">
+            <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
               <Building2 className="w-4 h-4 text-slate-700" />
               <div>
-                <h3 className="font-bold text-slate-900 text-sm">
+                <h3 className="font-bold text-slate-900 text-xs sm:text-sm">
                   Corporate Entity Profile &amp; Financial Base Currency
                 </h3>
-                <p className="text-[11px] text-slate-500">
-                  Primary corporate nomenclature and international ISO currency representation for construction estimates and general ledger billing.
+                <p className="text-[10px] text-slate-500">
+                  Primary corporate nomenclature and currency representation for construction estimates.
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wider">
-                  Corporate Entity Legal Name
+                <label className="block text-[10px] font-semibold text-slate-700 mb-0.5 uppercase tracking-wider">
+                  Corporate Legal Name
                 </label>
                 <input
                   type="text"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs text-slate-900 focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white"
-                  placeholder="e.g. BuildIQ Construction Management Corp."
+                  className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs text-slate-900 focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white"
+                  placeholder="e.g. BuildIQ Corp."
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wider">
-                  Reporting Currency (ISO 4217)
+                <label className="block text-[10px] font-semibold text-slate-700 mb-0.5 uppercase tracking-wider">
+                  Reporting Currency (ISO)
                 </label>
                 <input
                   type="text"
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs text-slate-900 focus:ring-1 focus:ring-slate-900 focus:border-slate-900 font-mono bg-white uppercase"
-                  placeholder="e.g. CAD, USD, EUR"
+                  className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs text-slate-900 focus:ring-1 focus:ring-slate-900 focus:border-slate-900 font-mono bg-white uppercase"
+                  placeholder="e.g. CAD, USD"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wider">
-                  Currency Symbol Representation
+                <label className="block text-[10px] font-semibold text-slate-700 mb-0.5 uppercase tracking-wider">
+                  Currency Symbol
                 </label>
                 <input
                   type="text"
                   value={currencySymbol}
                   onChange={(e) => setCurrencySymbol(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs text-slate-900 focus:ring-1 focus:ring-slate-900 focus:border-slate-900 font-mono bg-white"
-                  placeholder="e.g. $, £, €"
+                  className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs text-slate-900 focus:ring-1 focus:ring-slate-900 focus:border-slate-900 font-mono bg-white"
+                  placeholder="e.g. $, £"
                 />
               </div>
             </div>
           </div>
 
           {/* Cost Variance Risk Thresholds */}
-          <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-xs space-y-4">
-            <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+          <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-3.5 shadow-xs space-y-2">
+            <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
               <AlertTriangle className="w-4 h-4 text-slate-700" />
               <div>
-                <h3 className="font-bold text-slate-900 text-sm">
-                  Earned Value &amp; Budget Cost Variance Governance Thresholds
+                <h3 className="font-bold text-slate-900 text-xs sm:text-sm">
+                  Earned Value &amp; Cost Variance Governance Thresholds
                 </h3>
-                <p className="text-[11px] text-slate-500">
-                  Statistical tolerance bands governing automated executive warnings and project cost health escalations.
+                <p className="text-[10px] text-slate-500">
+                  Statistical tolerance bands governing automated warnings and cost health escalations.
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="p-3.5 bg-amber-50/50 rounded-lg border border-amber-200/80 space-y-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="p-2 bg-amber-50/50 rounded-lg border border-amber-200/80 space-y-1">
                 <div className="flex items-center justify-between">
-                  <label className="block text-[11px] font-bold text-amber-900 uppercase tracking-wider">
-                    Amber Warning Threshold %
+                  <label className="block text-[10px] font-bold text-amber-900 uppercase tracking-wider">
+                    Amber Warning %
                   </label>
-                  <span className="text-[10px] font-mono text-amber-800 font-bold bg-amber-100 px-1.5 py-0.2 rounded">
+                  <span className="text-[9px] font-mono text-amber-800 font-bold bg-amber-100 px-1 py-0.2 rounded">
                     Attention
                   </span>
                 </div>
@@ -1029,23 +1029,23 @@ export const SettingsView: React.FC = () => {
                     max="50"
                     value={amberThreshold}
                     onChange={(e) => setAmberThreshold(Number(e.target.value))}
-                    className="w-full pl-3 pr-7 py-2 rounded-md border border-amber-300 text-xs focus:ring-1 focus:ring-amber-600 font-mono bg-white text-slate-900"
+                    className="w-full pl-2 pr-6 py-1 rounded-md border border-amber-300 text-xs focus:ring-1 focus:ring-amber-600 font-mono bg-white text-slate-900"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 font-mono">
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-500 font-mono">
                     %
                   </span>
                 </div>
-                <p className="text-[10px] text-amber-800 leading-normal">
-                  Triggers early warning state when cost overruns reach this percentage above baseline.
+                <p className="text-[9px] text-amber-800 leading-normal">
+                  Early warning state when cost overruns reach this percentage.
                 </p>
               </div>
 
-              <div className="p-3.5 bg-rose-50/50 rounded-lg border border-rose-200/80 space-y-2">
+              <div className="p-2 bg-rose-50/50 rounded-lg border border-rose-200/80 space-y-1">
                 <div className="flex items-center justify-between">
-                  <label className="block text-[11px] font-bold text-rose-900 uppercase tracking-wider">
-                    Red Critical Threshold %
+                  <label className="block text-[10px] font-bold text-rose-900 uppercase tracking-wider">
+                    Red Critical %
                   </label>
-                  <span className="text-[10px] font-mono text-rose-800 font-bold bg-rose-100 px-1.5 py-0.2 rounded">
+                  <span className="text-[9px] font-mono text-rose-800 font-bold bg-rose-100 px-1 py-0.2 rounded">
                     Severe Risk
                   </span>
                 </div>
@@ -1056,23 +1056,23 @@ export const SettingsView: React.FC = () => {
                     max="100"
                     value={redThreshold}
                     onChange={(e) => setRedThreshold(Number(e.target.value))}
-                    className="w-full pl-3 pr-7 py-2 rounded-md border border-rose-300 text-xs focus:ring-1 focus:ring-rose-600 font-mono bg-white text-slate-900"
+                    className="w-full pl-2 pr-6 py-1 rounded-md border border-rose-300 text-xs focus:ring-1 focus:ring-rose-600 font-mono bg-white text-slate-900"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 font-mono">
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-500 font-mono">
                     %
                   </span>
                 </div>
-                <p className="text-[10px] text-rose-800 leading-normal">
-                  Flags severe budget breach on executive dashboards requiring steering committee escalation.
+                <p className="text-[9px] text-rose-800 leading-normal">
+                  Flags severe budget breach requiring steering committee escalation.
                 </p>
               </div>
 
-              <div className="p-3.5 bg-slate-50 rounded-lg border border-slate-200 space-y-2">
+              <div className="p-2 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
                 <div className="flex items-center justify-between">
-                  <label className="block text-[11px] font-bold text-slate-800 uppercase tracking-wider">
-                    Contingency Markup Buffer %
+                  <label className="block text-[10px] font-bold text-slate-800 uppercase tracking-wider">
+                    Contingency Buffer %
                   </label>
-                  <span className="text-[10px] font-mono text-slate-700 font-bold bg-slate-200 px-1.5 py-0.2 rounded">
+                  <span className="text-[9px] font-mono text-slate-700 font-bold bg-slate-200 px-1 py-0.2 rounded">
                     Baseline
                   </span>
                 </div>
@@ -1083,71 +1083,71 @@ export const SettingsView: React.FC = () => {
                     max="30"
                     value={defaultContingency}
                     onChange={(e) => setDefaultContingency(Number(e.target.value))}
-                    className="w-full pl-3 pr-7 py-2 rounded-md border border-slate-300 text-xs focus:ring-1 focus:ring-slate-900 font-mono bg-white text-slate-900"
+                    className="w-full pl-2 pr-6 py-1 rounded-md border border-slate-300 text-xs focus:ring-1 focus:ring-slate-900 font-mono bg-white text-slate-900"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 font-mono">
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-500 font-mono">
                     %
                   </span>
                 </div>
-                <p className="text-[10px] text-slate-600 leading-normal">
-                  Default contractual contingency reserve automatically provisioned on new project budgets.
+                <p className="text-[9px] text-slate-600 leading-normal">
+                  Default contractual contingency reserve provisioned on new budgets.
                 </p>
               </div>
             </div>
           </div>
 
           {/* Master WBS Hierarchy */}
-          <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-xs space-y-4">
-            <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+          <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-3.5 shadow-xs space-y-2">
+            <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
               <FolderTree className="w-4 h-4 text-slate-700" />
               <div>
-                <h3 className="font-bold text-slate-900 text-sm">
-                  Standard Canadian Construction WBS Master Hierarchy
+                <h3 className="font-bold text-slate-900 text-xs sm:text-sm">
+                  Standard Construction WBS Hierarchy
                 </h3>
-                <p className="text-[11px] text-slate-500">
-                  National master specification standard for classifying work breakdown structures, milestones, and contractor trades.
+                <p className="text-[10px] text-slate-500">
+                  National master specification standard for classifying work breakdown structures.
                 </p>
               </div>
             </div>
-            <div className="text-xs text-slate-700 space-y-2 font-mono p-4 bg-slate-50 rounded-lg border border-slate-200">
+            <div className="text-[11px] text-slate-700 space-y-1 font-mono p-2.5 bg-slate-50 rounded-lg border border-slate-200">
               <div className="flex items-start gap-2">
                 <span className="font-bold text-slate-900 shrink-0">DIV 01:</span>
-                <span>General Requirements &amp; Preliminaries (Permitting, Site Mobilization, Superintendency)</span>
+                <span>General Requirements &amp; Preliminaries</span>
               </div>
               <div className="flex items-start gap-2">
                 <span className="font-bold text-slate-900 shrink-0">DIV 02:</span>
-                <span>Substructure &amp; Deep Foundations (Caissons, Shoring, Bulk Excavation, Footings)</span>
+                <span>Substructure &amp; Deep Foundations</span>
               </div>
               <div className="flex items-start gap-2">
                 <span className="font-bold text-slate-900 shrink-0">DIV 03:</span>
-                <span>Superstructure &amp; Framing (Cast-in-Place Concrete Core, Post-Tension Slabs, Structural Steel)</span>
+                <span>Superstructure &amp; Framing</span>
               </div>
               <div className="flex items-start gap-2">
                 <span className="font-bold text-slate-900 shrink-0">DIV 04:</span>
-                <span>Building Envelope &amp; Thermal Enclosure (Unitized Curtain Wall, Architectural Precast, Roofing)</span>
+                <span>Building Envelope &amp; Thermal Enclosure</span>
               </div>
               <div className="flex items-start gap-2">
                 <span className="font-bold text-slate-900 shrink-0">DIV 05:</span>
-                <span>Interior Architecture &amp; Finishes (Drywall Assemblies, Acoustic Ceilings, Millwork, Tile)</span>
+                <span>Interior Architecture &amp; Finishes</span>
               </div>
               <div className="flex items-start gap-2">
                 <span className="font-bold text-slate-900 shrink-0">DIV 06:</span>
-                <span>Mechanical, Electrical, Plumbing &amp; Fire Protection (HVAC Chilled Water, Switchgear, Sprinklers)</span>
+                <span>Mechanical, Electrical &amp; Plumbing</span>
               </div>
             </div>
           </div>
 
           {/* Formal Save Action Bar */}
-          <div className="flex items-center justify-end gap-3 pt-2">
+          <div className="flex items-center justify-end gap-2 pt-1">
             {isSaved && (
-              <span className="text-xs text-emerald-700 font-semibold flex items-center gap-1 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200">
+              <span className="text-xs text-emerald-700 font-semibold flex items-center gap-1 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-200">
                 <Check className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Configuration changes committed to database.</span>
+                <span>Configuration changes committed.</span>
               </span>
             )}
             <button
               type="submit"
-              className="h-9 px-5 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-semibold text-xs rounded-lg shadow-xs flex items-center gap-2 transition-colors cursor-pointer border border-slate-900"
+              className="h-7.5 px-3.5 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-semibold text-xs rounded-md shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-900"
             >
               <Save className="w-3.5 h-3.5 text-slate-200" />
               <span>Save System Configuration</span>
@@ -1250,58 +1250,54 @@ export const SettingsView: React.FC = () => {
       {userToRevoke && (
         <div
           id="modal-revoke-user"
-          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-2"
           onClick={() => setUserToRevoke(null)}
         >
           <div
-            className="bg-white border border-slate-200 rounded-xl shadow-2xl max-w-md w-full p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150"
+            className="bg-white border border-slate-200 rounded-xl shadow-2xl max-w-[360px] w-full p-3.5 space-y-2.5 animate-in fade-in zoom-in-95 duration-150"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center shrink-0">
-                <AlertTriangle className="w-5 h-5" />
+            <div className="flex items-start gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-4 h-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-base font-bold text-slate-900">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900">
                   Revoke User Credentials
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Decommission user account and terminate enterprise access permissions.
+                <p className="text-[10px] text-slate-500 mt-0.5">
+                  Decommission user account and terminate access.
                 </p>
               </div>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-1.5 text-xs">
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-2 space-y-1 text-[11px]">
               <div className="flex justify-between items-center">
                 <span className="text-slate-500 font-medium">User Name:</span>
                 <span className="font-bold text-slate-900">{userToRevoke.name}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-500 font-medium">Corporate Email:</span>
+                <span className="text-slate-500 font-medium">Email:</span>
                 <span className="font-mono text-slate-700">{userToRevoke.email}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-500 font-medium">Username:</span>
-                <span className="font-mono text-slate-700">{userToRevoke.username || userToRevoke.email.split('@')[0]}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-slate-500 font-medium">Assigned Role:</span>
-                <span className="uppercase font-mono font-bold text-slate-800 text-[11px] bg-slate-200 px-1.5 py-0.5 rounded">
+                <span className="text-slate-500 font-medium">Role:</span>
+                <span className="uppercase font-mono font-bold text-slate-800 text-[10px] bg-slate-200 px-1 py-0.2 rounded">
                   {userToRevoke.role}
                 </span>
               </div>
             </div>
 
-            <p className="text-[11px] text-rose-700 bg-rose-50 border border-rose-200 rounded-md p-2.5 leading-relaxed">
-              <strong>Notice:</strong> This user record will be permanently purged from the active directory and authentication tokens will be invalidated immediately. An entry will be appended to the Governance Audit Trail.
+            <p className="text-[10px] text-rose-700 bg-rose-50 border border-rose-200 rounded-md p-2 leading-relaxed">
+              <strong>Notice:</strong> User record will be purged and authentication tokens invalidated immediately.
             </p>
 
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+            <div className="flex items-center justify-end gap-1.5 pt-1.5 border-t border-slate-100">
               <button
                 id="btn-cancel-revoke-user"
                 type="button"
                 onClick={() => setUserToRevoke(null)}
-                className="px-3.5 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-semibold transition-colors cursor-pointer"
+                className="px-2.5 py-1 rounded-md border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-semibold transition-colors cursor-pointer"
               >
                 Cancel
               </button>
@@ -1321,9 +1317,9 @@ export const SettingsView: React.FC = () => {
                   });
                   setTimeout(() => setActionToast(null), 5000);
                 }}
-                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs flex items-center gap-1.5"
+                className="px-3 py-1 rounded-md bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs flex items-center gap-1"
               >
-                <AlertTriangle className="w-3.5 h-3.5" />
+                <AlertTriangle className="w-3 h-3" />
                 <span>Confirm Revoke</span>
               </button>
             </div>
@@ -1335,37 +1331,37 @@ export const SettingsView: React.FC = () => {
       {isResetConfirmOpen && (
         <div
           id="modal-reset-demo"
-          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-2"
           onClick={() => setIsResetConfirmOpen(false)}
         >
           <div
-            className="bg-white border border-slate-200 rounded-xl shadow-2xl max-w-md w-full p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150"
+            className="bg-white border border-slate-200 rounded-xl shadow-2xl max-w-[360px] w-full p-3.5 space-y-2.5 animate-in fade-in zoom-in-95 duration-150"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center shrink-0">
-                <RotateCcw className="w-5 h-5" />
+            <div className="flex items-start gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center shrink-0">
+                <RotateCcw className="w-4 h-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-base font-bold text-slate-900">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900">
                   Reset Demonstration Database
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Revert all active project ledgers, field diaries, WBS baselines, and users to certified demonstration baseline.
+                <p className="text-[10px] text-slate-500 mt-0.5">
+                  Revert all active project ledgers, field diaries, WBS baselines, and users to certified baseline.
                 </p>
               </div>
             </div>
 
-            <p className="text-[11px] text-slate-600 bg-slate-50 border border-slate-200 rounded-md p-2.5 leading-relaxed">
+            <p className="text-[10px] text-slate-600 bg-slate-50 border border-slate-200 rounded-md p-2 leading-relaxed">
               All custom added users, field logs, and uploaded documents will be cleared and reset to factory defaults.
             </p>
 
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+            <div className="flex items-center justify-end gap-1.5 pt-1.5 border-t border-slate-100">
               <button
                 id="btn-cancel-reset-demo"
                 type="button"
                 onClick={() => setIsResetConfirmOpen(false)}
-                className="px-3.5 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-semibold transition-colors cursor-pointer"
+                className="px-2.5 py-1 rounded-md border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-semibold transition-colors cursor-pointer"
               >
                 Cancel
               </button>
@@ -1381,9 +1377,9 @@ export const SettingsView: React.FC = () => {
                   });
                   setTimeout(() => setActionToast(null), 5000);
                 }}
-                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs flex items-center gap-1.5"
+                className="px-3 py-1 rounded-md bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs flex items-center gap-1"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
+                <RotateCcw className="w-3 h-3" />
                 <span>Confirm Reset</span>
               </button>
             </div>

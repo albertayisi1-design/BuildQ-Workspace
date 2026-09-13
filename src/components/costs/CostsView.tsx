@@ -427,40 +427,40 @@ export const CostsView: React.FC<CostsViewProps> = ({
 
       {/* Add Cost Record Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-slate-900">
-            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-2 overflow-y-auto">
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xl w-full max-w-[400px] max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-slate-900">
+            <div className="px-3.5 py-2.5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-lg bg-amber-100 text-amber-800">
-                  <Receipt className="w-5 h-5" />
+                <div className="p-1.5 rounded-lg bg-amber-100 text-amber-800">
+                  <Receipt className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 font-display">
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 font-display">
                     Add Project Cost Record
                   </h3>
-                  <p className="text-xs text-slate-500">
-                    Direct entry of verified vendor payment or labour timesheet
+                  <p className="text-[10px] text-slate-500">
+                    Vendor payment, materials or labour
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-200 cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 p-1 rounded-md hover:bg-slate-200 cursor-pointer"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleAddCostSubmit} className="p-6 overflow-y-auto space-y-4 text-sm flex-1">
+            <form onSubmit={handleAddCostSubmit} className="p-3.5 overflow-y-auto space-y-2 text-xs flex-1">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                   Project *
                 </label>
                 <select
                   id="inp-cost-modal-project"
                   value={modalProjectId}
                   onChange={(e) => setModalProjectId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white font-medium"
+                  className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs bg-white font-medium"
                   required
                 >
                   {projects.map((p) => (
@@ -472,14 +472,14 @@ export const CostsView: React.FC<CostsViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                   WBS Activity (Optional)
                 </label>
                 <select
                   id="inp-cost-modal-wbs"
                   value={modalWbsId}
                   onChange={(e) => setModalWbsId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white"
+                  className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs bg-white"
                 >
                   <option value="">-- General Project Cost (No WBS link) --</option>
                   {modalWbsItems.map((w) => (
@@ -490,16 +490,16 @@ export const CostsView: React.FC<CostsViewProps> = ({
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Cost Category *
                   </label>
                   <select
                     id="inp-cost-modal-cat"
                     value={modalCategory}
                     onChange={(e) => setModalCategory(e.target.value as CostCategory)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs bg-white"
                   >
                     <option value="Labour">Labour</option>
                     <option value="Materials">Materials</option>
@@ -510,14 +510,14 @@ export const CostsView: React.FC<CostsViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Cost Type *
                   </label>
                   <select
                     id="inp-cost-modal-cost-type"
                     value={modalCostType}
                     onChange={(e) => setModalCostType(e.target.value as CostType)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs bg-white"
                   >
                     <option value="Direct">Direct Cost</option>
                     <option value="Indirect">Indirect Cost</option>
@@ -525,9 +525,9 @@ export const CostsView: React.FC<CostsViewProps> = ({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Amount (CAD) *
                   </label>
                   <input
@@ -538,12 +538,12 @@ export const CostsView: React.FC<CostsViewProps> = ({
                     required
                     value={modalAmount}
                     onChange={(e) => setModalAmount(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-mono font-bold"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs font-mono font-bold"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Date *
                   </label>
                   <input
@@ -552,15 +552,15 @@ export const CostsView: React.FC<CostsViewProps> = ({
                     required
                     value={modalDate}
                     onChange={(e) => setModalDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Supplier / Contractor / Employee *
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
+                    Supplier / Payee *
                   </label>
                   <input
                     id="inp-cost-modal-supplier"
@@ -569,12 +569,12 @@ export const CostsView: React.FC<CostsViewProps> = ({
                     value={modalSupplier}
                     onChange={(e) => setModalSupplier(e.target.value)}
                     placeholder="e.g. Ontario Steel Fab"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Reference / Receipt # *
                   </label>
                   <input
@@ -584,40 +584,40 @@ export const CostsView: React.FC<CostsViewProps> = ({
                     value={modalInvoice}
                     onChange={(e) => setModalInvoice(e.target.value)}
                     placeholder="e.g. REC-9042"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-mono"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs font-mono"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                   Description *
                 </label>
                 <textarea
                   id="inp-cost-modal-desc"
-                  rows={2}
+                  rows={1.5 as any}
                   required
                   value={modalDescription}
                   onChange={(e) => setModalDescription(e.target.value)}
                   placeholder="Detailed breakdown of work or items supplied"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs"
+                  className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs resize-none"
                 />
               </div>
 
-              <div className="pt-3 border-t border-slate-200 flex justify-end gap-2">
+              <div className="pt-2 border-t border-slate-200 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-xs hover:bg-slate-100 cursor-pointer"
+                  className="px-3 py-1 border border-slate-300 text-slate-700 rounded-md text-xs hover:bg-slate-100 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   id="btn-submit-add-cost"
                   type="submit"
-                  className="px-5 py-2 bg-cyan-600 hover:bg-lime-500 text-white font-bold rounded-lg text-xs cursor-pointer shadow-xs transition-all "
+                  className="px-3.5 py-1 bg-cyan-600 hover:bg-lime-500 text-white font-bold rounded-md text-xs cursor-pointer shadow-xs transition-all "
                 >
-                  Record Cost & Update Budget
+                  Record Cost
                 </button>
               </div>
             </form>

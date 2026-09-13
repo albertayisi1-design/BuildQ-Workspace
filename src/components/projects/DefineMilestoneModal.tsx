@@ -159,43 +159,43 @@ export const DefineMilestoneModal: React.FC<DefineMilestoneModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto">
-      <div className="bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-2xl my-8 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-2 overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-[440px] my-4 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         {/* Modal Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-slate-900 to-slate-800 text-white flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-400">
-              <Flag className="w-5 h-5" />
+        <div className="px-3.5 py-2.5 bg-gradient-to-r from-slate-900 to-slate-800 text-white flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-400">
+              <Flag className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">
-                {milestoneToEdit ? 'Edit Critical Path Milestone' : 'Define New Critical Path Milestone'}
+              <h3 className="text-xs sm:text-sm font-bold text-white">
+                {milestoneToEdit ? 'Edit Critical Path Milestone' : 'Define New Milestone'}
               </h3>
-              <p className="text-xs text-slate-300">
-                {project.name} &bull; Critical path schedule & completion tracking
+              <p className="text-[10px] text-slate-300">
+                {project.name} &bull; Critical path schedule tracking
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-700/50 transition-colors"
+            className="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-700/50 transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="p-3.5 space-y-2">
           {error && (
-            <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-xs flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 shrink-0" />
+            <div className="p-2 bg-rose-50 border border-rose-200 rounded-md text-rose-700 text-[11px] flex items-center gap-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           {/* Title */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
               Milestone Name / Critical Deliverable <span className="text-rose-500">*</span>
             </label>
             <input
@@ -204,47 +204,47 @@ export const DefineMilestoneModal: React.FC<DefineMilestoneModalProps> = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Substructure Raft Slab Pour & Curing"
-              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:bg-white transition-colors"
+              className="w-full px-2.5 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:bg-white transition-colors"
             />
           </div>
 
           {/* Critical Path Indicator Banner / Toggle */}
-          <div className="p-3.5 bg-amber-50/60 border border-amber-200/80 rounded-xl flex items-start gap-3">
+          <div className="p-2 bg-amber-50/60 border border-amber-200/80 rounded-lg flex items-start gap-2">
             <input
               type="checkbox"
               id="is_critical_path"
               checked={isCriticalPath}
               onChange={(e) => setIsCriticalPath(e.target.checked)}
-              className="mt-1 w-4 h-4 text-amber-600 rounded border-amber-300 focus:ring-amber-500 cursor-pointer"
+              className="mt-0.5 w-3.5 h-3.5 text-amber-600 rounded border-amber-300 focus:ring-amber-500 cursor-pointer"
             />
             <label htmlFor="is_critical_path" className="cursor-pointer">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-amber-950 uppercase tracking-wide">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[11px] font-bold text-amber-950 uppercase tracking-wide">
                   Critical Path Milestone
                 </span>
                 {isCriticalPath && (
-                  <span className="px-1.5 py-0.5 text-[10px] font-extrabold bg-amber-200 text-amber-900 rounded font-mono">
+                  <span className="px-1 py-0.2 text-[9px] font-extrabold bg-amber-200 text-amber-900 rounded font-mono">
                     SCHEDULE-CRITICAL
                   </span>
                 )}
               </div>
-              <p className="text-xs text-amber-800 mt-0.5 leading-relaxed">
-                Critical path milestones determine the minimum overall project duration. Any delay here directly drives baseline schedule slippage and late handover penalties.
+              <p className="text-[10px] text-amber-800 leading-tight mt-0.5">
+                Milestone determines overall project duration. Slippage directly impacts baseline completion.
               </p>
             </label>
           </div>
 
           {/* Category & Status */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5 text-slate-400" />
+              <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5 flex items-center gap-1">
+                <Layers className="w-3 h-3 text-slate-400" />
                 <span>Phase / Category</span>
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:bg-white"
+                className="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:bg-white"
               >
                 {COMMON_CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -260,14 +260,14 @@ export const DefineMilestoneModal: React.FC<DefineMilestoneModalProps> = ({
                   placeholder="Enter custom category"
                   value={customCategory}
                   onChange={(e) => setCustomCategory(e.target.value)}
-                  className="mt-2 w-full px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs"
+                  className="mt-1 w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs"
                 />
               )}
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-slate-400" />
+              <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5 flex items-center gap-1">
+                <Clock className="w-3 h-3 text-slate-400" />
                 <span>Current Status</span>
               </label>
               <select
@@ -284,7 +284,7 @@ export const DefineMilestoneModal: React.FC<DefineMilestoneModalProps> = ({
                     setProgress(0);
                   }
                 }}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:bg-white font-medium"
+                className="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:bg-white font-medium"
               >
                 <option value="Pending">Pending (Not Started)</option>
                 <option value="In Progress">In Progress</option>
@@ -295,10 +295,10 @@ export const DefineMilestoneModal: React.FC<DefineMilestoneModalProps> = ({
           </div>
 
           {/* Planned Date vs Actual Completion Date */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-slate-50/80 border border-slate-200 rounded-xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-2 bg-slate-50/80 border border-slate-200 rounded-lg">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-cyan-600" />
+              <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5 flex items-center gap-1">
+                <Calendar className="w-3 h-3 text-cyan-600" />
                 <span>Planned Critical Date <span className="text-rose-500">*</span></span>
               </label>
               <input
@@ -306,14 +306,13 @@ export const DefineMilestoneModal: React.FC<DefineMilestoneModalProps> = ({
                 required
                 value={plannedDate}
                 onChange={(e) => setPlannedDate(e.target.value)}
-                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono text-slate-900 focus:ring-2 focus:ring-cyan-500"
+                className="w-full px-2 py-1 bg-white border border-slate-300 rounded-md text-xs font-mono text-slate-900 focus:ring-1 focus:ring-cyan-500"
               />
-              <span className="text-[10px] text-slate-500 mt-1 block">Baseline contractual / engineering target</span>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5 flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                 <span>Actual Completion Date</span>
               </label>
               <input
@@ -322,26 +321,22 @@ export const DefineMilestoneModal: React.FC<DefineMilestoneModalProps> = ({
                 onChange={(e) => {
                   setActualDate(e.target.value);
                   if (e.target.value && status !== 'Achieved') {
-                    // Prompt status update if actual date is supplied
                     setStatus('Achieved');
                     setProgress(100);
                   }
                 }}
-                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono text-slate-900 focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-2 py-1 bg-white border border-slate-300 rounded-md text-xs font-mono text-slate-900 focus:ring-1 focus:ring-emerald-500"
               />
-              <span className="text-[10px] text-slate-500 mt-1 block">
-                {status === 'Achieved' ? 'Date signed off & verified' : 'Optional until milestone is achieved'}
-              </span>
             </div>
 
             {/* Calculated Variance Live Feedback */}
             {variancePreview && (
-              <div className={`col-span-full px-3 py-2 rounded-lg border text-xs font-medium flex items-center justify-between ${variancePreview.color}`}>
-                <div className="flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Variance Analysis: <strong>{variancePreview.label}</strong></span>
+              <div className={`col-span-full px-2 py-1 rounded-md border text-[11px] font-medium flex items-center justify-between ${variancePreview.color}`}>
+                <div className="flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" />
+                  <span>Variance: <strong>{variancePreview.label}</strong></span>
                 </div>
-                <span className="font-mono font-bold text-[11px]">
+                <span className="font-mono font-bold text-[10px]">
                   {variancePreview.days > 0 ? `+${variancePreview.days}d` : `${variancePreview.days}d`}
                 </span>
               </div>
@@ -349,14 +344,14 @@ export const DefineMilestoneModal: React.FC<DefineMilestoneModalProps> = ({
           </div>
 
           {/* Progress & Responsible Lead */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                  <Percent className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Completion Progress</span>
+              <div className="flex items-center justify-between mb-0.5">
+                <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1">
+                  <Percent className="w-3 h-3 text-slate-400" />
+                  <span>Completion</span>
                 </label>
-                <span className="text-xs font-mono font-bold text-cyan-700">{progress}%</span>
+                <span className="text-[11px] font-mono font-bold text-cyan-700">{progress}%</span>
               </div>
               <input
                 type="range"
@@ -374,68 +369,68 @@ export const DefineMilestoneModal: React.FC<DefineMilestoneModalProps> = ({
                     setStatus('In Progress');
                   }
                 }}
-                className="w-full accent-cyan-600 cursor-pointer"
+                className="w-full accent-cyan-600 cursor-pointer h-1.5"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-slate-400" />
-                <span>Responsible Lead / Subcontractor</span>
+              <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5 flex items-center gap-1">
+                <User className="w-3 h-3 text-slate-400" />
+                <span>Responsible Lead</span>
               </label>
               <input
                 type="text"
                 value={responsibleParty}
                 onChange={(e) => setResponsibleParty(e.target.value)}
-                placeholder="e.g. Apex Structural Engineers Ltd."
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 focus:ring-2 focus:ring-cyan-500 focus:bg-white"
+                placeholder="e.g. Apex Structural Engineers"
+                className="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs text-slate-900 focus:ring-1 focus:ring-cyan-500 focus:bg-white"
               />
             </div>
           </div>
 
           {/* Scope / Deliverable Description */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5 text-slate-400" />
-              <span>Scope, Deliverables & Acceptance Criteria</span>
+            <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5 flex items-center gap-1">
+              <FileText className="w-3 h-3 text-slate-400" />
+              <span>Scope & Acceptance Criteria</span>
             </label>
             <textarea
-              rows={2}
+              rows={1.5 as any}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Detail required engineering sign-offs, inspections, or concrete cylinder strength tests..."
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:bg-white resize-none"
+              placeholder="Detail required engineering sign-offs, inspections..."
+              className="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:bg-white resize-none"
             />
           </div>
 
           {/* Notes / Verification Records */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Verification Sign-off & Field Notes
+            <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-0.5">
+              Sign-off &amp; Field Notes
             </label>
             <textarea
-              rows={2}
+              rows={1.5 as any}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. City Inspector sign-off permit #84920 issued; 28-day break tests passed 35MPa."
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:bg-white resize-none"
+              placeholder="e.g. City Inspector sign-off permit #84920 issued."
+              className="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-cyan-500 focus:bg-white resize-none"
             />
           </div>
 
           {/* Actions */}
-          <div className="pt-3 border-t border-slate-200 flex items-center justify-end gap-3">
+          <div className="pt-2 border-t border-slate-200 flex items-center justify-end gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+              className="px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 text-xs font-bold text-white bg-cyan-700 hover:bg-cyan-800 rounded-lg shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
+              className="px-3.5 py-1 text-xs font-bold text-white bg-cyan-700 hover:bg-cyan-800 rounded-md shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
             >
-              <Flag className="w-4 h-4" />
+              <Flag className="w-3.5 h-3.5" />
               <span>{milestoneToEdit ? 'Update Milestone' : 'Save Milestone'}</span>
             </button>
           </div>

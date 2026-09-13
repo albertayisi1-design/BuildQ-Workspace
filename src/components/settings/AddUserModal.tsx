@@ -195,34 +195,34 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose, onU
   return (
     <div
       id="modal-add-user"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-950/70 backdrop-blur-xs overflow-y-auto"
       onClick={handleFinish}
     >
       <div
-        className="bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden my-8 animate-fadeIn"
+        className="bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-[360px] overflow-hidden my-4 animate-fadeIn"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Formal Executive Header */}
-        <div className="bg-slate-900 p-4 sm:p-5 text-white flex items-center justify-between border-b border-slate-800">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-200">
-              <UserPlus className="w-5 h-5 text-slate-200" />
+        <div className="bg-slate-900 px-3.5 py-2.5 text-white flex items-center justify-between border-b border-slate-800">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-200">
+              <UserPlus className="w-3.5 h-3.5 text-slate-200" />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-bold text-white tracking-tight">
-                Provision Corporate User Account
+              <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight">
+                Provision Corporate User
               </h3>
-              <p className="text-[11px] text-slate-400">
-                Official role-based access authorization &amp; credential provisioning
+              <p className="text-[10px] text-slate-400">
+                Role authorization &amp; credential setup
               </p>
             </div>
           </div>
           <button
             onClick={handleFinish}
-            className="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
             title="Close"
           >
-            <X className="w-4 h-4" />
+            <X className="w-3.5 h-3.5" />
           </button>
         </div>
 
@@ -319,82 +319,82 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose, onU
           </div>
         ) : (
           /* Form Body */
-          <form onSubmit={handleSubmit} className="p-5 space-y-4 text-xs">
+          <form onSubmit={handleSubmit} className="p-3 space-y-2 text-[11px]">
             {error && (
-              <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg flex items-center gap-2 text-rose-700 text-xs">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+              <div className="p-1.5 bg-rose-50 border border-rose-200 rounded-md flex items-center gap-1.5 text-rose-700 text-[10px]">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
             {/* Name & Corporate Email */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-[10px] font-semibold text-slate-700 uppercase tracking-wider mb-0.5">
                   Full Legal Name *
                 </label>
                 <div className="relative">
-                  <UserIcon className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <UserIcon className="w-3 h-3 text-slate-400 absolute left-2 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     required
                     placeholder="e.g. David Vance"
                     value={name}
                     onChange={(e) => handleNameChange(e.target.value)}
-                    className="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white text-xs text-slate-900"
+                    className="w-full pl-6 pr-2 py-1 border border-slate-300 rounded-md focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white text-[11px] text-slate-900"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-[10px] font-semibold text-slate-700 uppercase tracking-wider mb-0.5">
                   Corporate Email *
                 </label>
                 <div className="relative">
-                  <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <Mail className="w-3 h-3 text-slate-400 absolute left-2 top-1/2 -translate-y-1/2" />
                   <input
                     type="email"
                     required
                     placeholder="david.vance@buildiq.ca"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white text-xs text-slate-900"
+                    className="w-full pl-6 pr-2 py-1 border border-slate-300 rounded-md focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white text-[11px] text-slate-900"
                   />
                 </div>
               </div>
             </div>
 
             {/* Username & Department */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-[10px] font-semibold text-slate-700 uppercase tracking-wider mb-0.5">
                   System Username *
                 </label>
                 <div className="relative">
-                  <AtSign className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <AtSign className="w-3 h-3 text-slate-400 absolute left-2 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     required
                     placeholder="david_v"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white font-mono text-xs text-slate-900"
+                    className="w-full pl-6 pr-2 py-1 border border-slate-300 rounded-md focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white font-mono text-[11px] text-slate-900"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-[10px] font-semibold text-slate-700 uppercase tracking-wider mb-0.5">
                   Department / Unit
                 </label>
                 <div className="relative">
-                  <Briefcase className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <Briefcase className="w-3 h-3 text-slate-400 absolute left-2 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     placeholder="Project Operations"
                     value={department}
                     onChange={(e) => setDepartment(e.target.value)}
-                    className="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white text-xs text-slate-900"
+                    className="w-full pl-6 pr-2 py-1 border border-slate-300 rounded-md focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white text-[11px] text-slate-900"
                   />
                 </div>
               </div>
@@ -402,10 +402,10 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose, onU
 
             {/* Certified Role Selection */}
             <div>
-              <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+              <label className="block text-[10px] font-semibold text-slate-700 uppercase tracking-wider mb-0.5">
                 Authorized Governance Role *
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-1.5">
                 {CORPORATE_ROLES.map((r) => {
                   const Icon = r.icon;
                   const isSelected = role === r.role;
@@ -413,21 +413,21 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose, onU
                     <div
                       key={r.role}
                       onClick={() => setRole(r.role)}
-                      className={`p-2.5 rounded-lg border text-left cursor-pointer transition-all ${
+                      className={`p-1.5 rounded-md border text-left cursor-pointer transition-all ${
                         isSelected
                           ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
                           : 'bg-white border-slate-200 hover:border-slate-300 text-slate-800'
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5">
                           <Icon
-                            className={`w-3.5 h-3.5 ${isSelected ? 'text-sky-400' : 'text-slate-500'}`}
+                            className={`w-3 h-3 ${isSelected ? 'text-sky-400' : 'text-slate-500'}`}
                           />
-                          <span className="font-bold text-xs">{r.label}</span>
+                          <span className="font-bold text-[11px]">{r.label}</span>
                         </div>
                         <span
-                          className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold uppercase ${
+                          className={`text-[8px] font-mono px-1 py-0.2 rounded font-bold uppercase ${
                             isSelected
                               ? 'bg-slate-800 text-slate-300'
                               : 'bg-slate-100 text-slate-600'
@@ -436,13 +436,6 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose, onU
                           {r.tier}
                         </span>
                       </div>
-                      <p
-                        className={`text-[10px] mt-1 leading-snug line-clamp-2 ${
-                          isSelected ? 'text-slate-300' : 'text-slate-500'
-                        }`}
-                      >
-                        {r.description}
-                      </p>
                     </div>
                   );
                 })}
@@ -451,37 +444,37 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose, onU
 
             {/* Contact Phone */}
             <div>
-              <label className="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider mb-1">
+              <label className="block text-[10px] font-semibold text-slate-700 uppercase tracking-wider mb-0.5">
                 Contact Phone
               </label>
               <div className="relative">
-                <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                <Phone className="w-3 h-3 text-slate-400 absolute left-2 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="+1 (416) 555-0188"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white text-xs"
+                  className="w-full pl-6 pr-2 py-1 border border-slate-300 rounded-md focus:ring-1 focus:ring-slate-900 focus:border-slate-900 bg-white text-[11px]"
                 />
               </div>
             </div>
 
-            {/* Email Verification Link Checkbox - Key Feature */}
-            <div className="p-3 bg-sky-50/80 border border-sky-200 rounded-lg space-y-2">
-              <label className="flex items-start gap-2.5 cursor-pointer">
+            {/* Email Verification Link Checkbox */}
+            <div className="p-2 bg-sky-50/80 border border-sky-200 rounded-md space-y-1">
+              <label className="flex items-start gap-1.5 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={sendVerificationLink}
                   onChange={(e) => setSendVerificationLink(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 cursor-pointer"
+                  className="mt-0.5 h-3.5 w-3.5 rounded border-slate-300 text-sky-600 focus:ring-sky-500 cursor-pointer"
                 />
                 <div>
-                  <div className="font-bold text-slate-900 text-xs flex items-center gap-1.5">
-                    <Mail className="w-3.5 h-3.5 text-sky-700" />
-                    <span>Send email link to user email for verification and password setting</span>
+                  <div className="font-bold text-slate-900 text-[11px] flex items-center gap-1">
+                    <Mail className="w-3 h-3 text-sky-700" />
+                    <span>Send email link for verification and password setup</span>
                   </div>
-                  <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
-                    Dispatches an official invitation email with a secure token link. The user will click the link to verify their corporate email and configure their password.
+                  <p className="text-[10px] text-slate-600 leading-snug">
+                    Dispatches an invitation link for corporate email verification and password setting.
                   </p>
                 </div>
               </label>
@@ -489,54 +482,42 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, onClose, onU
 
             {/* Fallback password if email verification is unticked */}
             {!sendVerificationLink && (
-              <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg space-y-2">
-                <label className="block text-[11px] font-semibold text-amber-900 uppercase tracking-wider">
+              <div className="p-2 bg-amber-50 border border-amber-200 rounded-md space-y-1">
+                <label className="block text-[10px] font-semibold text-amber-900 uppercase tracking-wider">
                   Initial Temporary Password
                 </label>
                 <div className="relative">
-                  <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <Lock className="w-3 h-3 text-slate-400 absolute left-2 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-8 pr-3 py-1.5 border border-amber-300 rounded-lg font-mono text-xs bg-white text-slate-800"
+                    className="w-full pl-6 pr-2 py-1 border border-amber-300 rounded-md font-mono text-[11px] bg-white text-slate-800"
                   />
                 </div>
-                <p className="text-[10px] text-amber-800">
-                  You will need to manually communicate this password to the user.
-                </p>
               </div>
             )}
 
-            {/* Governance Notice */}
-            <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-[11px] text-slate-600 space-y-0.5">
-              <div className="font-semibold text-slate-800">Compliance Audit Notice:</div>
-              <div>
-                This account creation will be timestamped and logged under Administrator{' '}
-                <strong className="text-slate-900">{currentUser?.name || 'System Administrator'}</strong>.
-              </div>
-            </div>
-
             {/* Footer Actions */}
-            <div className="pt-2 flex items-center justify-end gap-2.5 border-t border-slate-100">
+            <div className="pt-2 flex items-center justify-end gap-1.5 border-t border-slate-100">
               <button
                 type="button"
                 onClick={onClose}
-                className="h-8.5 px-4 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold cursor-pointer text-xs"
+                className="h-7 px-2.5 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold cursor-pointer text-[11px]"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="h-8.5 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-semibold text-xs shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-900 disabled:opacity-60"
+                className="h-7 px-3 rounded-md bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white font-semibold text-[11px] shadow-xs flex items-center gap-1 transition-colors cursor-pointer border border-slate-900 disabled:opacity-60"
               >
                 {isLoading ? (
-                  <span className="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span className="inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
-                    <UserPlus className="w-3.5 h-3.5 text-slate-200" />
-                    <span>{sendVerificationLink ? 'Provision & Send Email Link' : 'Provision User'}</span>
+                    <UserPlus className="w-3 h-3 text-slate-200" />
+                    <span>{sendVerificationLink ? 'Provision & Send Link' : 'Provision User'}</span>
                   </>
                 )}
               </button>

@@ -457,89 +457,89 @@ export const ProjectIntelligenceView: React.FC<ProjectIntelligenceViewProps> = (
         </div>
       </div>
 
-      {/* Bento Primary Estimate Presentation Box - Compact 40% reduction */}
-      <div className="bento-card-dark p-4 sm:p-5 relative overflow-hidden">
-        <div className="relative z-10 space-y-3.5">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-3.5">
+      {/* Bento Primary Estimate Presentation Box - Compact 50% reduction */}
+      <div className="bento-card-dark p-2.5 sm:p-3 relative overflow-hidden">
+        <div className="relative z-10 space-y-1.5">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-slate-800 pb-1.5">
             <div>
-              <div className="flex items-center gap-2">
-                <span className="px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 text-[9px] font-mono font-bold border border-amber-400/30 uppercase tracking-wider">
+              <div className="flex items-center gap-1.5">
+                <span className="px-1 py-0.2 rounded bg-amber-400/20 text-amber-300 text-[8px] font-mono font-bold border border-amber-400/30 uppercase tracking-wider">
                   Preliminary Estimate
                 </span>
-                <span className="text-[11px] text-slate-400">
+                <span className="text-[9px] text-slate-400">
                   Empirical Formula: Floor Area ({result.query.floor_area} m²) &times; Avg Cost/m² ({formatCurrency(result.benchmarks.avg_cost_per_m2)})
                 </span>
               </div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-amber-400 mt-1 font-mono tracking-tight">
+              <div className="text-lg sm:text-xl font-bold text-amber-400 mt-0.5 font-mono tracking-tight">
                 {formatCurrency(result.preliminary_estimate.estimated_cost)}
               </div>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <p className="text-[9px] text-slate-400 mt-0.5">
                 Baseline preliminary cost for {result.query.floor_area} m² {result.query.project_type} build ({result.query.location})
               </p>
             </div>
 
             {/* Estimated Range Bento Box */}
-            <div className="bg-slate-800/80 p-2.5 sm:p-3 rounded-lg border border-slate-700/80 text-right">
-              <span className="text-[9px] uppercase tracking-wider text-slate-400 font-bold block">
+            <div className="bg-slate-800/80 p-1.5 sm:p-2 rounded-md border border-slate-700/80 text-right">
+              <span className="text-[8px] uppercase tracking-wider text-slate-400 font-bold block">
                 Estimated Cost Range (Min &ndash; Max)
               </span>
-              <div className="text-base sm:text-lg font-bold font-mono text-white mt-0.5">
+              <div className="text-xs sm:text-sm font-bold font-mono text-white mt-0.5">
                 {formatCurrency(result.preliminary_estimate.range_min)} &ndash;{' '}
                 {formatCurrency(result.preliminary_estimate.range_max)}
               </div>
-              <div className="text-[9px] text-slate-400 mt-0.5">
+              <div className="text-[8px] text-slate-400 mt-0.5">
                 Based on historical rates {formatCurrency(result.benchmarks.min_cost_per_m2)}/m² to {formatCurrency(result.benchmarks.max_cost_per_m2)}/m²
               </div>
             </div>
           </div>
 
           {/* 4 Secondary Benchmark Bento Metrics */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-            <div className="bg-slate-800/60 p-2.5 rounded-lg border border-slate-700/60">
-              <span className="text-[9px] text-slate-400 uppercase tracking-wider font-bold block">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+            <div className="bg-slate-800/60 p-1.5 rounded-md border border-slate-700/60">
+              <span className="text-[8px] text-slate-400 uppercase tracking-wider font-bold block">
                 Average Cost / m²
               </span>
-              <div className="text-base sm:text-lg font-bold text-amber-300 mt-0.5 font-mono">
+              <div className="text-xs sm:text-sm font-bold text-amber-300 mt-0.5 font-mono">
                 {formatCurrency(result.benchmarks.avg_cost_per_m2)}/m²
               </div>
-              <div className="text-[9px] text-slate-500 mt-0.5">Matched portfolio mean</div>
+              <div className="text-[8px] text-slate-500 mt-0.5">Matched portfolio mean</div>
             </div>
 
-            <div className="bg-slate-800/60 p-2.5 rounded-lg border border-slate-700/60">
-              <span className="text-[9px] text-slate-400 uppercase tracking-wider font-bold block">
+            <div className="bg-slate-800/60 p-1.5 rounded-md border border-slate-700/60">
+              <span className="text-[8px] text-slate-400 uppercase tracking-wider font-bold block">
                 Median Cost / m²
               </span>
-              <div className="text-base sm:text-lg font-bold text-slate-200 mt-0.5 font-mono">
+              <div className="text-xs sm:text-sm font-bold text-slate-200 mt-0.5 font-mono">
                 {formatCurrency(result.benchmarks.median_cost_per_m2)}/m²
               </div>
-              <div className="text-[9px] text-slate-500 mt-0.5">Distribution median</div>
+              <div className="text-[8px] text-slate-500 mt-0.5">Distribution median</div>
             </div>
 
-            <div className="bg-slate-800/60 p-2.5 rounded-lg border border-slate-700/60">
-              <span className="text-[9px] text-slate-400 uppercase tracking-wider font-bold block">
+            <div className="bg-slate-800/60 p-1.5 rounded-md border border-slate-700/60">
+              <span className="text-[8px] text-slate-400 uppercase tracking-wider font-bold block">
                 Estimated Duration
               </span>
-              <div className="text-base sm:text-lg font-bold text-emerald-400 mt-0.5 font-mono">
+              <div className="text-xs sm:text-sm font-bold text-emerald-400 mt-0.5 font-mono">
                 {result.preliminary_estimate.estimated_duration_months} Months
               </div>
-              <div className="text-[9px] text-slate-500 mt-0.5">Historical execution avg</div>
+              <div className="text-[8px] text-slate-500 mt-0.5">Historical execution avg</div>
             </div>
 
-            <div className="bg-slate-800/60 p-2.5 rounded-lg border border-slate-700/60">
-              <span className="text-[9px] text-slate-400 uppercase tracking-wider font-bold block">
+            <div className="bg-slate-800/60 p-1.5 rounded-md border border-slate-700/60">
+              <span className="text-[8px] text-slate-400 uppercase tracking-wider font-bold block">
                 Suggested Contingency
               </span>
-              <div className="text-base sm:text-lg font-bold text-amber-400 mt-0.5 font-mono">
+              <div className="text-xs sm:text-sm font-bold text-amber-400 mt-0.5 font-mono">
                 {result.preliminary_estimate.suggested_contingency_percent}%
               </div>
-              <div className="text-[9px] text-slate-500 mt-0.5">Risk & market buffer</div>
+              <div className="text-[8px] text-slate-500 mt-0.5">Risk & market buffer</div>
             </div>
           </div>
 
           {/* Mandatory Formal Disclaimer */}
-          <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-[11px] flex items-start gap-2">
-            <ShieldAlert className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
-            <div className="leading-relaxed">
+          <div className="p-1.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-300 text-[9px] flex items-start gap-1.5">
+            <ShieldAlert className="w-3 h-3 text-amber-400 shrink-0 mt-0.5" />
+            <div className="leading-tight">
               <strong className="font-semibold text-amber-200">Notice: </strong>
               {result.preliminary_estimate.disclaimer}
             </div>

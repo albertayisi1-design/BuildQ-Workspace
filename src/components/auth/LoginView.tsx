@@ -3,18 +3,14 @@ import { useAuth } from '../../context/AuthContext';
 import { useBuild } from '../../context/BuildContext';
 import { db } from '../../services/db';
 import { LogicaLogo } from '../common/LogicaLogo';
-import { RequestAccessModal } from './RequestAccessModal';
 import {
   Lock,
   Eye,
   EyeOff,
   ArrowRight,
   User as UserIcon,
-  Mail,
-  KeyRound,
   CheckCircle2,
   AlertCircle,
-  UserPlus,
 } from 'lucide-react';
 
 interface LoginViewProps {
@@ -34,7 +30,6 @@ export const LoginView: React.FC<LoginViewProps> = ({ onOpenVerify }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isResetDispatching, setIsResetDispatching] = useState(false);
-  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
 
   const handleGoogleSignIn = async () => {
     setErrorMessage(null);
@@ -56,7 +51,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onOpenVerify }) => {
 
     const cleanIdentifier = identifier.trim();
     if (!cleanIdentifier) {
-      setErrorMessage('Please enter your corporate email or username.');
+      setErrorMessage('Please enter your email or username.');
       return;
     }
 
@@ -76,7 +71,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onOpenVerify }) => {
 
     const cleanIdentifier = identifier.trim();
     if (!cleanIdentifier) {
-      setErrorMessage('Please enter your corporate email above to receive a password setup link.');
+      setErrorMessage('Please enter your email above to receive a password setup link.');
       return;
     }
 
@@ -84,10 +79,10 @@ export const LoginView: React.FC<LoginViewProps> = ({ onOpenVerify }) => {
     try {
       const existingUser = db.getUserByEmail(cleanIdentifier) || db.getUserByUsername(cleanIdentifier);
       if (!existingUser) {
-        throw new Error(`No user record found matching "${cleanIdentifier}". Please submit an access request below.`);
+        throw new Error(`No account found matching "${cleanIdentifier}". Please contact your administrator to provision your account.`);
       }
 
-      const res = await sendUserVerificationEmail(existingUser);
+      await sendUserVerificationEmail(existingUser);
       setInfoMessage(`Verification and password setup link dispatched to ${existingUser.email}. Please check your inbox.`);
     } catch (err: any) {
       setErrorMessage(err?.message || 'Failed to dispatch password setup email.');
@@ -107,13 +102,10 @@ export const LoginView: React.FC<LoginViewProps> = ({ onOpenVerify }) => {
           id="workspace-sign-in-card"
           className="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 shadow-md shadow-slate-200/40"
         >
-          <div className="mb-3 text-center">
+          <div className="mb-4 text-center">
             <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
               BuildIQ Enterprise Workspace
             </h1>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              Enterprise Access &amp; Credential Authentication
-            </p>
           </div>
 
           {errorMessage && (
@@ -131,13 +123,13 @@ export const LoginView: React.FC<LoginViewProps> = ({ onOpenVerify }) => {
           )}
 
           {/* Primary Form */}
-          <form onSubmit={handleSubmit} className="space-y-2.5">
+          <form onSubmit={handleSubmit} className="space-y-3">
             <div>
               <label
                 htmlFor="input-login-identifier"
-                className="block text-[11px] font-semibold text-slate-700 mb-1"
+                className="sr-only"
               >
-                Corporate Email or Username
+                Email or username
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
@@ -150,30 +142,19 @@ export const LoginView: React.FC<LoginViewProps> = ({ onOpenVerify }) => {
                   aria-label="Email or username"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  placeholder="name@company.com or username"
-                  className="w-full pl-8 pr-2.5 py-1.5 bg-slate-50/70 border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-2 focus:ring-slate-100 transition-colors"
+                  placeholder="Email or username"
+                  className="w-full pl-8 pr-2.5 py-2 bg-slate-50/70 border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-2 focus:ring-slate-100 transition-colors"
                 />
               </div>
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label
-                  htmlFor="input-login-password"
-                  className="block text-[11px] font-semibold text-slate-700"
-                >
-                  Password
-                </label>
-                <button
-                  type="button"
-                  onClick={handleForgotPassword}
-                  disabled={isResetDispatching}
-                  className="text-[11px] text-sky-700 hover:text-sky-900 transition-colors cursor-pointer font-medium disabled:opacity-50"
-                  title="Send password setup link to the email specified above"
-                >
-                  {isResetDispatching ? 'Sending link...' : 'Send reset link'}
-                </button>
-              </div>
+              <label
+                htmlFor="input-login-password"
+                className="sr-only"
+              >
+                Password
+              </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
                   <Lock className="w-3.5 h-3.5" />
@@ -182,10 +163,11 @@ export const LoginView: React.FC<LoginViewProps> = ({ onOpenVerify }) => {
                   id="input-login-password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
+                  aria-label="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className="w-full pl-8 pr-8 py-1.5 bg-slate-50/70 border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-2 focus:ring-slate-100 transition-colors font-mono"
+                  placeholder="Password"
+                  className="w-full pl-8 pr-8 py-2 bg-slate-50/70 border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-800 focus:ring-2 focus:ring-slate-100 transition-colors font-mono"
                 />
                 <button
                   type="button"
@@ -198,8 +180,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onOpenVerify }) => {
               </div>
             </div>
 
-            {/* Remember Me Option */}
-            <div className="flex items-center pt-0.5">
+            {/* Remember Me & Reset Link */}
+            <div className="flex items-center justify-between pt-0.5">
               <label className="flex items-center gap-1.5 cursor-pointer select-none">
                 <input
                   type="checkbox"
@@ -209,6 +191,16 @@ export const LoginView: React.FC<LoginViewProps> = ({ onOpenVerify }) => {
                 />
                 <span className="text-[10px] sm:text-[11px] text-slate-600">Remember this device</span>
               </label>
+
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                disabled={isResetDispatching}
+                className="text-[11px] text-sky-700 hover:text-sky-900 transition-colors cursor-pointer font-medium disabled:opacity-50"
+                title="Send password setup link to the email specified above"
+              >
+                {isResetDispatching ? 'Sending link...' : 'Forgot password?'}
+              </button>
             </div>
 
             {/* Submit Action */}
@@ -276,28 +268,66 @@ export const LoginView: React.FC<LoginViewProps> = ({ onOpenVerify }) => {
             )}
           </button>
 
-          {/* New User & Verification Links Section */}
-          <div className="mt-3 pt-2.5 border-t border-slate-100 flex flex-col gap-1.5 text-center text-xs">
-            <button
-              id="btn-open-request-access"
-              type="button"
-              onClick={() => setIsRequestModalOpen(true)}
-              className="text-[11px] text-sky-800 hover:text-sky-950 font-semibold inline-flex items-center justify-center gap-1 cursor-pointer py-1 rounded hover:bg-sky-50 transition-colors"
-            >
-              <UserPlus className="w-3.5 h-3.5 text-sky-600" />
-              <span>New user? Request account &amp; email setup link</span>
-            </button>
-
-            {onOpenVerify && (
+          {/* Demo Credentials Quick-Select */}
+          <div className="mt-3 pt-2.5 border-t border-slate-100">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
+                Demo Accounts
+              </span>
+              <span className="text-[9px] font-mono text-slate-400">
+                pwd: password123
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-1.5">
               <button
                 type="button"
-                onClick={() => onOpenVerify()}
-                className="text-[10px] text-slate-500 hover:text-slate-800 cursor-pointer inline-flex items-center justify-center gap-1"
+                id="btn-demo-login-admin"
+                onClick={() => {
+                  setIdentifier('admin');
+                  setPassword('password123');
+                }}
+                className="px-2 py-1 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded text-[10px] font-medium text-slate-700 text-left transition-colors cursor-pointer"
               >
-                <KeyRound className="w-3 h-3 text-slate-400" />
-                <span>Have an activation token? Complete password setup</span>
+                <span className="font-bold text-slate-900 block">Admin</span>
+                <span className="text-[9px] text-slate-400 font-mono">admin</span>
               </button>
-            )}
+              <button
+                type="button"
+                id="btn-demo-login-pm"
+                onClick={() => {
+                  setIdentifier('pm');
+                  setPassword('password123');
+                }}
+                className="px-2 py-1 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded text-[10px] font-medium text-slate-700 text-left transition-colors cursor-pointer"
+              >
+                <span className="font-bold text-slate-900 block">Project Mgr</span>
+                <span className="text-[9px] text-slate-400 font-mono">pm</span>
+              </button>
+              <button
+                type="button"
+                id="btn-demo-login-eng"
+                onClick={() => {
+                  setIdentifier('engineer');
+                  setPassword('password123');
+                }}
+                className="px-2 py-1 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded text-[10px] font-medium text-slate-700 text-left transition-colors cursor-pointer"
+              >
+                <span className="font-bold text-slate-900 block">Engineer</span>
+                <span className="text-[9px] text-slate-400 font-mono">engineer</span>
+              </button>
+              <button
+                type="button"
+                id="btn-demo-login-fin"
+                onClick={() => {
+                  setIdentifier('finance');
+                  setPassword('password123');
+                }}
+                className="px-2 py-1 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded text-[10px] font-medium text-slate-700 text-left transition-colors cursor-pointer"
+              >
+                <span className="font-bold text-slate-900 block">Finance</span>
+                <span className="text-[9px] text-slate-400 font-mono">finance</span>
+              </button>
+            </div>
           </div>
 
           {/* Embedded Logica Softworks Banner */}
@@ -309,15 +339,6 @@ export const LoginView: React.FC<LoginViewProps> = ({ onOpenVerify }) => {
           </div>
         </div>
       </div>
-
-      {/* Request Access Modal */}
-      <RequestAccessModal
-        isOpen={isRequestModalOpen}
-        onClose={() => setIsRequestModalOpen(false)}
-        onSuccess={(user) => {
-          setInfoMessage(`Account provisioned! Verification link sent to ${user.email}.`);
-        }}
-      />
     </div>
   );
 };

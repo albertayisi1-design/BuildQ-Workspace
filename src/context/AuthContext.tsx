@@ -30,28 +30,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
   const [isFirebaseConnected, setIsFirebaseConnected] = useState<boolean>(true);
 
-  // Ensure the application immediately loads the live Portfolio Overview upon deployment and preview visits
+  // Enforce mandatory login: Every user accessing the link must authenticate
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
     try {
-      const activeSessionId =
-        localStorage.getItem('buildiq_active_session_user') ||
-        sessionStorage.getItem('buildiq_active_session_user');
+      // Clear any legacy persistent login from localStorage so fresh link access requires authentication
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('buildiq_active_session_user');
+      }
+
+      // Check for explicit sign-out in this session
+      const explicitlyLoggedOut = sessionStorage.getItem('buildiq_logged_out');
+      if (explicitlyLoggedOut === 'true') {
+        return null;
+      }
+
+      // Only restore from sessionStorage if the user actively authenticated in this tab session
+      const activeSessionId = sessionStorage.getItem('buildiq_active_session_user');
       if (activeSessionId) {
         const users = db.getUsers();
         const found = users.find((u) => u.id === activeSessionId);
         if (found) return found;
       }
-      // If user explicitly clicked log out during this session, show login
-      const explicitlyLoggedOut = sessionStorage.getItem('buildiq_logged_out');
-      if (explicitlyLoggedOut === 'true') {
-        return null;
-      }
     } catch {
       // Storage access blocked or unavailable
     }
-    // Default to the principal Administrator (Sarah Jenkins / Albert Ayisi) so Portfolio Overview is instantly visible
-    const defaultUsers = db.getUsers();
-    return defaultUsers[0] || INITIAL_USERS[0];
+    // Mandatory login enforced: unauthenticated visitors must sign in
+    return null;
   });
 
   // Track Firebase Auth state changes
@@ -121,11 +125,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (currentUser) {
         sessionStorage.removeItem('buildiq_logged_out');
         sessionStorage.setItem('buildiq_active_session_user', currentUser.id);
-        localStorage.setItem('buildiq_active_session_user', currentUser.id);
       } else {
         sessionStorage.removeItem('buildiq_active_session_user');
-        localStorage.removeItem('buildiq_active_session_user');
       }
+      localStorage.removeItem('buildiq_active_session_user');
     } catch {}
   }, [currentUser]);
 

@@ -472,34 +472,34 @@ export const HistoricalProjectsView: React.FC<HistoricalProjectsViewProps> = ({
 
       {/* Archive New Project Modal */}
       {isAddOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-slate-900">
-            <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-2 overflow-y-auto">
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xl w-full max-w-[400px] max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-slate-900">
+            <div className="px-3.5 py-2.5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-lg bg-amber-100 text-amber-800">
-                  <Archive className="w-5 h-5" />
+                <div className="p-1.5 rounded-lg bg-amber-100 text-amber-800">
+                  <Archive className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 font-display">
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 font-display">
                     Archive Completed Project
                   </h3>
-                  <p className="text-xs text-slate-500">
-                    Add verified historical data to improve future intelligence estimation
+                  <p className="text-[10px] text-slate-500">
+                    Add verified historical data to improve future estimation
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsAddOpen(false)}
-                className="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-200 cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 p-1 rounded-md hover:bg-slate-200 cursor-pointer"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleAddHistorical} className="p-6 overflow-y-auto space-y-4 text-sm flex-1">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleAddHistorical} className="p-3.5 overflow-y-auto space-y-2 text-xs flex-1">
+              <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Project Name *
                   </label>
                   <input
@@ -507,12 +507,12 @@ export const HistoricalProjectsView: React.FC<HistoricalProjectsViewProps> = ({
                     required
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
-                    placeholder="e.g. Bayview Luxury Condos"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs"
+                    placeholder="e.g. Bayview Condos"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Client Name *
                   </label>
                   <input
@@ -520,31 +520,31 @@ export const HistoricalProjectsView: React.FC<HistoricalProjectsViewProps> = ({
                     required
                     value={newClient}
                     onChange={(e) => setNewClient(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Type *
                   </label>
                   <select
                     value={newType}
                     onChange={(e) => setNewType(e.target.value as ProjectType)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs bg-white"
                   >
                     <option value="Residential">Residential</option>
                     <option value="Commercial">Commercial</option>
-                    <option value="Office Renovation">Office Renovation</option>
+                    <option value="Office Renovation">Office</option>
                     <option value="Retail">Retail</option>
                     <option value="Industrial">Industrial</option>
                     <option value="Institutional">Institutional</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Building Type *
                   </label>
                   <input
@@ -552,11 +552,11 @@ export const HistoricalProjectsView: React.FC<HistoricalProjectsViewProps> = ({
                     required
                     value={newBuildingType}
                     onChange={(e) => setNewBuildingType(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Location *
                   </label>
                   <input
@@ -564,14 +564,14 @@ export const HistoricalProjectsView: React.FC<HistoricalProjectsViewProps> = ({
                     required
                     value={newLocation}
                     onChange={(e) => setNewLocation(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Floor Area (m²) *
                   </label>
                   <input
@@ -579,62 +579,62 @@ export const HistoricalProjectsView: React.FC<HistoricalProjectsViewProps> = ({
                     required
                     value={newFloorArea}
                     onChange={(e) => setNewFloorArea(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-mono"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs font-mono"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Planned Cost (CAD) *
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
+                    Planned (CAD) *
                   </label>
                   <input
                     type="number"
                     required
                     value={newPlannedCost}
                     onChange={(e) => setNewPlannedCost(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-mono"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs font-mono"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Final Actual (CAD) *
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
+                    Actual (CAD) *
                   </label>
                   <input
                     type="number"
                     required
                     value={newFinalCost}
                     onChange={(e) => setNewFinalCost(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-mono font-bold text-amber-800"
+                    className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs font-mono font-bold text-amber-800"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                   Key Lessons Learned *
                 </label>
                 <textarea
-                  rows={2}
+                  rows={1.5 as any}
                   required
                   value={newLessons}
                   onChange={(e) => setNewLessons(e.target.value)}
                   placeholder="Key factors influencing schedule or cost performance"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs"
+                  className="w-full px-2 py-1 rounded-md border border-slate-300 text-xs resize-none"
                 />
               </div>
 
-              <div className="pt-3 border-t border-slate-200 flex justify-end gap-2">
+              <div className="pt-2 border-t border-slate-200 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsAddOpen(false)}
-                  className="px-4 py-2 border border-slate-300 rounded-lg text-xs hover:bg-slate-100 cursor-pointer"
+                  className="px-3 py-1 border border-slate-300 rounded-md text-xs hover:bg-slate-100 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-cyan-600 hover:bg-lime-500 text-white font-bold rounded-lg text-xs cursor-pointer transition-all "
+                  className="px-3.5 py-1 bg-cyan-600 hover:bg-lime-500 text-white font-bold rounded-md text-xs cursor-pointer transition-all "
                 >
-                  Save to Benchmark Database
+                  Save to Archive
                 </button>
               </div>
             </form>

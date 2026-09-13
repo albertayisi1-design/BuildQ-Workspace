@@ -224,46 +224,46 @@ export const AttachDocumentModal: React.FC<AttachDocumentModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-2">
       <div
         id="attach-document-modal"
-        className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-150"
+        className="bg-white w-full max-w-[420px] rounded-xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-150"
       >
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-700 flex items-center justify-center font-bold">
-              <UploadCloud className="w-4 h-4 text-amber-600" />
+        <div className="px-3.5 py-2.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-700 flex items-center justify-center font-bold">
+              <UploadCloud className="w-3.5 h-3.5 text-amber-600" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900 font-sans">
-                {editDocument ? 'Edit Document Metadata' : 'Attach Project Document'}
+              <h2 className="text-xs sm:text-sm font-bold text-slate-900 font-sans">
+                {editDocument ? 'Edit Document Metadata' : 'Attach Document'}
               </h2>
-              <p className="text-xs text-slate-500">
-                Upload and index blueprints, contracts, permits, or specifications
+              <p className="text-[10px] text-slate-500">
+                Blueprints, contracts, permits, specifications
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors cursor-pointer"
+            className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors cursor-pointer"
           >
-            <X className="w-4 h-4" />
+            <X className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {/* Modal Body / Form */}
-        <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4 text-xs">
+        <form onSubmit={handleSubmit} className="p-3.5 overflow-y-auto space-y-2 text-xs">
           {errorMessage && (
-            <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 flex items-center gap-2 text-xs">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+            <div className="p-2 bg-rose-50 border border-rose-200 rounded-lg text-rose-800 flex items-center gap-1.5 text-[11px]">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0 text-rose-600" />
               <span>{errorMessage}</span>
             </div>
           )}
 
           {/* File Dropzone Area */}
           <div>
-            <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-1.5">
+            <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-0.5">
               Project File Attachment <span className="text-rose-500">*</span>
             </label>
             <input
@@ -278,7 +278,7 @@ export const AttachDocumentModal: React.FC<AttachDocumentModalProps> = ({
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className={`border-2 border-dashed rounded-xl p-5 text-center transition-all cursor-pointer ${
+              className={`border border-dashed rounded-lg p-2.5 text-center transition-all cursor-pointer ${
                 isDragging
                   ? 'border-amber-500 bg-amber-50/60'
                   : fileName
@@ -287,31 +287,31 @@ export const AttachDocumentModal: React.FC<AttachDocumentModalProps> = ({
               }`}
             >
               {fileName ? (
-                <div className="flex items-center justify-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold">
-                    <FileCheck className="w-5 h-5 text-emerald-600" />
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold">
+                    <FileCheck className="w-4 h-4 text-emerald-600" />
                   </div>
                   <div className="text-left">
-                    <div className="font-bold text-slate-900 text-sm">{fileName}</div>
-                    <div className="text-slate-500 text-[11px]">
+                    <div className="font-bold text-slate-900 text-xs truncate max-w-[240px]">{fileName}</div>
+                    <div className="text-slate-500 text-[10px]">
                       {formatFileSize(fileSize)} • {fileType || 'Document'} •{' '}
                       <span className="text-amber-600 font-semibold hover:underline">
-                        Click to replace
+                        Replace
                       </span>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="space-y-1">
-                  <div className="mx-auto w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 mb-1.5">
-                    <UploadCloud className="w-5 h-5 text-slate-600" />
+                <div className="space-y-0.5">
+                  <div className="mx-auto w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 mb-0.5">
+                    <UploadCloud className="w-3.5 h-3.5 text-slate-600" />
                   </div>
-                  <p className="font-semibold text-slate-800 text-xs">
+                  <p className="font-semibold text-slate-800 text-[11px]">
                     Drag and drop file here, or{' '}
-                    <span className="text-amber-600 font-bold underline">browse from computer</span>
+                    <span className="text-amber-600 font-bold underline">browse</span>
                   </p>
-                  <p className="text-slate-400 text-[10px]">
-                    Supported formats: PDF, DWG/CAD, DOCX, XLSX, PNG/JPG, ZIP (Up to 50 MB)
+                  <p className="text-slate-400 text-[9px]">
+                    PDF, DWG/CAD, DOCX, XLSX, PNG/JPG, ZIP (Up to 50 MB)
                   </p>
                 </div>
               )}
@@ -319,32 +319,32 @@ export const AttachDocumentModal: React.FC<AttachDocumentModalProps> = ({
           </div>
 
           {/* Title and Category Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-1">
+              <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-0.5">
                 Document Title <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g., Architectural Working Drawings & Elevations"
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 font-sans"
+                placeholder="e.g., Working Drawings"
+                className="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 font-sans"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-1">
-                Document Category <span className="text-rose-500">*</span>
+              <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-0.5">
+                Category <span className="text-rose-500">*</span>
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as DocumentCategory)}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 font-sans font-semibold cursor-pointer"
+                className="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 font-sans font-semibold cursor-pointer"
               >
                 {CATEGORY_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
-                    {opt.label} — {opt.desc}
+                    {opt.label}
                   </option>
                 ))}
               </select>
@@ -352,28 +352,28 @@ export const AttachDocumentModal: React.FC<AttachDocumentModalProps> = ({
           </div>
 
           {/* Version, Status, and Authority Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-1">
-                Version / Revision
+              <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-0.5">
+                Version / Rev
               </label>
               <input
                 type="text"
                 value={version}
                 onChange={(e) => setVersion(e.target.value)}
-                placeholder="e.g., Rev C or v1.0"
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500 font-mono"
+                placeholder="e.g. Rev A"
+                className="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500 font-mono"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-1">
-                Compliance Status
+              <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-0.5">
+                Status
               </label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as DocumentStatus)}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500 font-sans font-semibold cursor-pointer"
+                className="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500 font-sans font-semibold cursor-pointer"
               >
                 {STATUS_OPTIONS.map((s) => (
                   <option key={s.value} value={s.value}>
@@ -384,75 +384,75 @@ export const AttachDocumentModal: React.FC<AttachDocumentModalProps> = ({
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-1">
-                Issuing Authority / Firm
+              <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-0.5">
+                Issuing Authority
               </label>
               <input
                 type="text"
                 value={issuingAuthority}
                 onChange={(e) => setIssuingAuthority(e.target.value)}
-                placeholder="e.g., City of Toronto or Architect"
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                placeholder="e.g. Architect"
+                className="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500"
               />
             </div>
           </div>
 
           {/* Expiration Date and Tags */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-1">
-                Expiry / Validity Date (Optional)
+              <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-0.5">
+                Expiry Date (Optional)
               </label>
               <input
                 type="date"
                 value={expiryDate}
                 onChange={(e) => setExpiryDate(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500 font-mono"
+                className="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500 font-mono"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-1">
+              <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-0.5">
                 Tags (Comma separated)
               </label>
               <input
                 type="text"
                 value={tagsInput}
                 onChange={(e) => setTagsInput(e.target.value)}
-                placeholder="e.g., Phase 1, Structural, OBC 2024"
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                placeholder="e.g. Phase 1, Structural"
+                className="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500"
               />
             </div>
           </div>
 
           {/* Scope Notes / Description */}
           <div>
-            <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-1">
-              Description & Engineering / Legal Scope Notes
+            <label className="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-0.5">
+              Description &amp; Notes
             </label>
             <textarea
-              rows={3}
+              rows={1.5 as any}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Provide context regarding modifications, drawing sheets included, seal approvals, or stipulations..."
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500"
+              placeholder="Provide context regarding drawings, stipulations..."
+              className="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-md text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500 resize-none"
             />
           </div>
 
           {/* Modal Actions */}
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5">
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-end gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold cursor-pointer transition-colors"
+              className="px-3 py-1 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold cursor-pointer transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-lg bg-cyan-600 hover:bg-lime-500 text-white font-bold flex items-center gap-1.5 shadow-sm cursor-pointer transition-all "
+              className="px-3.5 py-1 rounded-md bg-cyan-600 hover:bg-lime-500 text-white text-xs font-bold flex items-center gap-1 shadow-xs cursor-pointer transition-all "
             >
-              <Check className="w-4 h-4" />
+              <Check className="w-3.5 h-3.5" />
               <span>{editDocument ? 'Save Changes' : 'Attach Document'}</span>
             </button>
           </div>

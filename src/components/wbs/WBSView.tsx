@@ -715,29 +715,29 @@ export const WBSView: React.FC<WBSViewProps> = ({
 
       {/* Add Activity Modal */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-lg p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-bold text-slate-900 font-display">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-2 overflow-y-auto">
+          <div className="bg-white rounded-xl border border-slate-200 shadow-2xl w-full max-w-[360px] p-3.5 space-y-2 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 font-display">
                 Add WBS Activity
               </h3>
               <button
                 onClick={() => setIsAddModalOpen(false)}
-                className="text-slate-400 hover:text-slate-700 cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 p-0.5 rounded cursor-pointer"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateActivity} className="space-y-3 text-sm">
+            <form onSubmit={handleCreateActivity} className="space-y-2 text-xs">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                   Parent Phase
                 </label>
                 <select
                   value={targetPhaseId}
                   onChange={(e) => setTargetPhaseId(e.target.value)}
-                  className="w-full h-9 px-3 border border-slate-200 rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full h-7 px-2 border border-slate-200 rounded-md text-xs bg-slate-50 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                 >
                   {phases.map((ph) => (
                     <option key={ph.id} value={ph.id}>
@@ -747,9 +747,9 @@ export const WBSView: React.FC<WBSViewProps> = ({
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     WBS Code
                   </label>
                   <input
@@ -758,11 +758,11 @@ export const WBSView: React.FC<WBSViewProps> = ({
                     value={newCode}
                     onChange={(e) => setNewCode(e.target.value)}
                     placeholder="e.g. 02.04"
-                    className="w-full h-9 px-3 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full h-7 px-2 border border-slate-200 rounded-md text-xs focus:outline-none focus:ring-1 focus:ring-cyan-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Planned Cost (C$)
                   </label>
                   <input
@@ -770,13 +770,13 @@ export const WBSView: React.FC<WBSViewProps> = ({
                     required
                     value={newPlannedCost}
                     onChange={(e) => setNewPlannedCost(Number(e.target.value))}
-                    className="w-full h-9 px-3 border border-slate-200 rounded-lg text-xs font-mono focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full h-7 px-2 border border-slate-200 rounded-md text-xs font-mono focus:outline-none focus:ring-1 focus:ring-cyan-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                   Activity Name
                 </label>
                 <input
@@ -784,60 +784,60 @@ export const WBSView: React.FC<WBSViewProps> = ({
                   required
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  placeholder="e.g. Reinforcement steel inspection & rebar tying"
-                  className="w-full h-9 px-3 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  placeholder="e.g. Reinforcement inspection"
+                  className="w-full h-7 px-2 border border-slate-200 rounded-md text-xs focus:outline-none focus:ring-1 focus:ring-cyan-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Description & Notes
+                <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
+                  Description &amp; Notes
                 </label>
                 <textarea
-                  rows={2}
+                  rows={1.5 as any}
                   value={newDesc}
                   onChange={(e) => setNewDesc(e.target.value)}
                   placeholder="Scope details and contractor specifications..."
-                  className="w-full p-3 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full p-1.5 border border-slate-200 rounded-md text-xs focus:outline-none focus:ring-1 focus:ring-cyan-500 resize-none"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     Start Date
                   </label>
                   <input
                     type="date"
                     value={newStartDate}
                     onChange={(e) => setNewStartDate(e.target.value)}
-                    className="w-full h-9 px-3 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full h-7 px-2 border border-slate-200 rounded-md text-xs focus:outline-none focus:ring-1 focus:ring-cyan-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-[10px] font-semibold text-slate-700 mb-0.5">
                     End Date
                   </label>
                   <input
                     type="date"
                     value={newEndDate}
                     onChange={(e) => setNewEndDate(e.target.value)}
-                    className="w-full h-9 px-3 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="w-full h-7 px-2 border border-slate-200 rounded-md text-xs focus:outline-none focus:ring-1 focus:ring-cyan-500"
                   />
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+              <div className="pt-2 border-t border-slate-100 flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(false)}
-                  className="px-4 py-2 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer"
+                  className="px-3 py-1 rounded-md border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-cyan-700 hover:bg-cyan-800 text-white text-xs font-bold shadow-xs cursor-pointer"
+                  className="px-3.5 py-1 rounded-md bg-cyan-700 hover:bg-cyan-800 text-white text-xs font-bold shadow-xs cursor-pointer"
                 >
                   Save Activity
                 </button>
